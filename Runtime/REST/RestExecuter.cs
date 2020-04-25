@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Framework.REST;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using HttpMethod = Framework.REST.HttpMethod;
 
-namespace Framework.REST
+namespace Runtime.REST
 {
     public class RestExecuter
     {
