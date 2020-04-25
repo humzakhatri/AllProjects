@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using HttpMethod = Framework.REST.HttpMethod;
+using Localizable.Strings;
 
 namespace Runtime.REST
 {
@@ -26,7 +27,7 @@ namespace Runtime.REST
                 case HttpMethod.Delete:
                     return Client.DeleteAsync(request.Path);
                 default:
-                    throw new Exception("Must provide content with Put Or Post.");
+                    throw new Exception(Messages.MustProvideContentWithPutOrPost.Text);
             }
         }
 
@@ -39,7 +40,7 @@ namespace Runtime.REST
                 case HttpMethod.Put:
                     return Client.PutAsync(request.Path, content);
                 default:
-                    throw new Exception("Cannot add content to get or delete methods.");
+                    throw new Exception(Messages.CannotAddContentToGetOrDeleteMethods.Text);
             }
         }
 

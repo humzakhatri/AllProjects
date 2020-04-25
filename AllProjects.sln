@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestServer", "RestServer\Re
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csproj", "{6E5A4601-C851-49DC-8DB1-9B9B0FB9A9DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Runtime", "Runtime\Runtime.csproj", "{17DD41A4-86DC-4AE8-A95E-82B1A4346B60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Runtime", "Runtime\Runtime.csproj", "{17DD41A4-86DC-4AE8-A95E-82B1A4346B60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSite", "WebSite\WebSite.csproj", "{3CB4740A-34A3-4FAA-A09E-2DA64687A518}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSite", "WebSite\WebSite.csproj", "{3CB4740A-34A3-4FAA-A09E-2DA64687A518}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Localizable", "Localizable\Localizable.csproj", "{0A1553D6-D66E-44EE-8F3E-7717776C9283}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{3CB4740A-34A3-4FAA-A09E-2DA64687A518}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CB4740A-34A3-4FAA-A09E-2DA64687A518}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CB4740A-34A3-4FAA-A09E-2DA64687A518}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A1553D6-D66E-44EE-8F3E-7717776C9283}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A1553D6-D66E-44EE-8F3E-7717776C9283}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A1553D6-D66E-44EE-8F3E-7717776C9283}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A1553D6-D66E-44EE-8F3E-7717776C9283}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
