@@ -18,6 +18,8 @@ namespace Framework.REST
 
         public string BaseUrlWihtoutPort { get; set; }
 
+        public HttpMethod HttpMethod { get; set; }
+
         public RestConnection(string serverName, string baseUrlWithoutPort, int port, RestScheme scheme)
         {
             BaseUrlWihtoutPort = baseUrlWithoutPort;

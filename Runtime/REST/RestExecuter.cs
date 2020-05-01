@@ -13,9 +13,11 @@ namespace Runtime.REST
     {
         public readonly RestConnection Connection;
         private HttpClient Client;
+        private readonly HttpMethod _HttpMethod;
         public RestExecuter(RestConnection connection)
         {
             Connection = connection;
+            _HttpMethod = connection.HttpMethod;
             Client = CreateClient();
         }
         public Task<HttpResponseMessage> Execute(RestRequest request)
@@ -26,21 +28,12 @@ namespace Runtime.REST
                     return Client.GetAsync(request.Path);
                 case HttpMethod.Delete:
                     return Client.DeleteAsync(request.Path);
-                default:
-                    throw new Exception(Messages.MustProvideContentWithPutOrPost.Text);
-            }
-        }
-
-        public Task<HttpResponseMessage> Execute(RestRequest request, HttpContent content)
-        {
-            switch (request.Method)
-            {
                 case HttpMethod.Post:
-                    return Client.PostAsync(request.Path, content);
+                    return Client.PostAsync(request.Path, request.GetContent());
                 case HttpMethod.Put:
-                    return Client.PutAsync(request.Path, content);
+                    return Client.PutAsync(request.Path, request.GetContent());
                 default:
-                    throw new Exception(Messages.CannotAddContentToGetOrDeleteMethods.Text);
+                    throw new Exception(Messages.MethodNotSupported.Text);
             }
         }
 

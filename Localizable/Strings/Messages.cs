@@ -8,5 +8,6 @@ namespace Localizable.Strings
     {
         public static LocalizableString MustProvideContentWithPutOrPost = new LocalizableString("Must provide content with Put Or Post.");
         public static LocalizableString CannotAddContentToGetOrDeleteMethods = new LocalizableString("Cannot add content to get or delete methods.");
+        public static LocalizableString MethodNotSupported = new LocalizableString("Method not Supported");
     }
 }
