@@ -27,7 +27,7 @@ namespace Runtime.Server.ServerComponents
 
         private void LoadApisToTree(ApiConfigurationList apis)
         {
-            apis.ForEach(a => ApiTree.Add(a.Path));
+            apis.ForEach(a => ApiTree.Add(a.Path, a.Method));
         }
     }
 }

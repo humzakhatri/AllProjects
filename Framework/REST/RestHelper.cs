@@ -12,8 +12,7 @@ namespace Framework.REST
             bool first = false;
             for (int i = 0; i < tokens.Length; i++)
             {
-                if (tokens[i].StartsWith('/')) tokens[i] = tokens[i].Substring(1);
-                if (tokens[i].EndsWith('/')) tokens[i] = tokens[i].Substring(0, tokens[i].Length - 1);
+                tokens[i] = CleanResource(tokens[i]);
                 if (first)
                     final = $"{final}/{tokens[i]}";
                 else
@@ -21,6 +20,13 @@ namespace Framework.REST
                 first = false;
             }
             return final;
+        }
+
+        public static string CleanResource(string resource)
+        {
+            if (resource.StartsWith('/')) resource = resource.Substring(1);
+            if (resource.EndsWith('/')) resource = resource.Substring(0, resource.Length - 1);
+            return resource;
         }
     }
 }

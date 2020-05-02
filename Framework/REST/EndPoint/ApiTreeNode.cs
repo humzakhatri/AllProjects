@@ -27,17 +27,23 @@ namespace Framework.REST.EndPoint
             return value == Value;
         }
 
-        public void Add(string[] splitPath, int startAt = 0)
+        public void Add(string[] splitPath, HttpMethod method, int startAt = 0)
         {
-            if (splitPath.Length == startAt)
-                return;
-            var found = Children.FirstOrDefault(n => Value == splitPath[startAt]);
-            if (found == null)
+            if (splitPath.Length - 1 == startAt)
             {
-                found = CreateNode(splitPath[startAt]);
-                Children.Add(found);
+                var leaf = CreateNode(splitPath[startAt], method);
+                Children.Add(leaf);
             }
-            found.Add(splitPath, startAt + 1);
+            else
+            {
+                var found = Children.FirstOrDefault(n => Value == splitPath[startAt]);
+                if (found == null)
+                {
+                    found = CreateNode(splitPath[startAt]);
+                    Children.Add(found);
+                }
+                found.Add(splitPath, method, startAt + 1);
+            }
         }
 
         public void Remove(string[] splitPath, HttpMethod method, int startAt = 0)
@@ -80,6 +86,13 @@ namespace Framework.REST.EndPoint
             if (value.StartsWith('{') && value.EndsWith('}'))
                 return new ApiTreeNodeParameter(value);
             return new ApiTreeNodeConstant(value);
+        }
+
+        public static ApiTreeNodeBase CreateNode(string value, HttpMethod method)
+        {
+            var node = CreateNode(value);
+            node.Method = method;
+            return node;
         }
     }
 

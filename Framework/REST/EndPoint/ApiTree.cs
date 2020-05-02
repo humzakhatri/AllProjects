@@ -7,14 +7,14 @@ namespace Framework.REST.EndPoint
     public class ApiTree
     {
         public ApiTreeNodeBase Top { get; set; } = new ApiTreeNodeConstant();
-        public void Add(string path)
+        public void Add(string path, HttpMethod method)
         {
-            Top.Add(path);
+            Top.Add(RestHelper.CleanResource(path).Split('/'), method);
         }
 
-        public void Remove(string path)
+        public void Remove(string path, HttpMethod method)
         {
-
+            Top.Remove(RestHelper.CleanResource(path).Split('/'), method);
         }
     }
 }
