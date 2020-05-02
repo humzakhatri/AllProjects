@@ -4,8 +4,11 @@ using System.Text;
 
 namespace Runtime.Server
 {
-    public class Server
+    public class RuntimeServer
     {
+        public void Initialize()
+        {
 
+        }
     }
 }

@@ -9,10 +9,9 @@ namespace RestServer.Middlewares
     public class CustomEndpointMiddleware
     {
         private readonly RequestDelegate _Next;
-        public ARouterMiddleware(RequestDelegate next)
+        public CustomEndpointMiddleware(RequestDelegate next)
         {
             _Next = next;
-            //RouterMiddleware
         }
         public async Task Invoke(HttpContext context)
         {

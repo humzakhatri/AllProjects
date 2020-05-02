@@ -11,14 +11,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RestServer.Middlewares;
+using Runtime.Server;
 
 namespace RestServer
 {
     public class Startup
     {
+        public static RuntimeServerBootstrap Bootstrap { get; set; }
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            Bootstrap = new RuntimeServerBootstrap();
         }
 
         public IConfiguration Configuration { get; }
