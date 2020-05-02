@@ -25,7 +25,7 @@ namespace Runtime.Database
             }
         }
 
-        public List<Object[]> ExecuteSelect(DbConnectInfoBase dbConnectInfo, string sqlStatement)
+        public List<Object[]> GetData(DbConnectInfoBase dbConnectInfo, string sqlStatement)
         {
             SqlDataReader dataReader;
             var data = new List<Object[]>();

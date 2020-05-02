@@ -9,4 +9,8 @@
     <Folder Include="Interfaces\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Localizable\Localizable.csproj" />
+  </ItemGroup>
+
 </Project>
