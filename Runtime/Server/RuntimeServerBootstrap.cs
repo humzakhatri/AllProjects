@@ -7,20 +7,20 @@ namespace Runtime.Server
 {
     public class RuntimeServerBootstrap : RuntimeProcessorBase
     {
+        public RuntimeServer RuntimeServer { get; set; }
         public RuntimeServerBootstrap()
         {
             Initialize();
             Start();
         }
 
-        public RuntimeServer RuntimeServer { get; set; }
 
-        public override void OnInitialize()
+        protected override void OnInitialize()
         {
             RuntimeServer = new RuntimeServer();
         }
 
-        public override void OnStart()
+        protected override void OnStart()
         {
         }
     }

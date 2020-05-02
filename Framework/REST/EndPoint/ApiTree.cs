@@ -16,5 +16,11 @@ namespace Framework.REST.EndPoint
         {
             Top.Remove(RestHelper.CleanResource(path).Split('/'), method);
         }
+
+        public string Find(string path, HttpMethod method)
+        {
+            var tokens = RestHelper.CleanResource(path).Split('/');
+            return Top.MatchRequest(tokens, method);
+        }
     }
 }

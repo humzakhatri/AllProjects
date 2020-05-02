@@ -7,9 +7,9 @@ namespace Runtime.Runtime
 {
     public abstract class RuntimeProcessorBase : IProcessor
     {
-        public abstract void OnInitialize();
+        protected abstract void OnInitialize();
 
-        public abstract void OnStart();
+        protected abstract void OnStart();
 
         public void Initialize()
         {

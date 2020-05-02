@@ -1,4 +1,5 @@
 ﻿using Framework.REST.EndPoint;
+using Runtime.REST;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,7 +14,15 @@ namespace Runtime.Server.ServerComponents
         private ApiTree ApiTree { get; set; } = new ApiTree();
         public ServerComponentApiEndpoint()
         {
+        }
+
+        protected override void OnInitialize()
+        {
             LoadConfiguration();
+        }
+
+        protected override void OnStart()
+        {
         }
 
         private void LoadConfiguration()
@@ -28,6 +37,10 @@ namespace Runtime.Server.ServerComponents
         private void LoadApisToTree(ApiConfigurationList apis)
         {
             apis.ForEach(a => ApiTree.Add(a.Path, a.Method));
+        }
+
+        public void ProcessRequest(RestRequestContext context)
+        {
         }
     }
 }

@@ -28,5 +28,22 @@ namespace Framework.REST
             if (resource.EndsWith('/')) resource = resource.Substring(0, resource.Length - 1);
             return resource;
         }
+
+        public static HttpMethod ParseMethod(string method)
+        {
+            switch (method)
+            {
+                case "GET":
+                    return HttpMethod.Get;
+                case "POST":
+                    return HttpMethod.Post;
+                case "PUT":
+                    return HttpMethod.Put;
+                case "DELETE":
+                    return HttpMethod.Delete;
+                default:
+                    throw new Exception("Method Not Supported.");
+            }
+        }
     }
 }

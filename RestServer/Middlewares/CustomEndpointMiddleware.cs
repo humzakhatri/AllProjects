@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Runtime.REST;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,9 @@ namespace RestServer.Middlewares
 
         private Task<bool> Handle(HttpContext context)
         {
+            Startup.Bootstrap.RuntimeServer.ProcessRestRequest(new RestRequestContext(context));
             var task = new Task<bool>(() => false);
+            task.Start();
             return task;
         }
     }
