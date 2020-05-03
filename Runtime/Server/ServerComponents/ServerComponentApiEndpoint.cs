@@ -1,4 +1,5 @@
 ﻿using Framework.REST.EndPoint;
+using Microsoft.AspNetCore.Http;
 using Runtime.REST;
 using System;
 using System.Collections.Generic;
@@ -36,11 +37,14 @@ namespace Runtime.Server.ServerComponents
 
         private void LoadApisToTree(ApiConfigurationList apis)
         {
-            apis.ForEach(a => ApiTree.Add(a.Path, a.Method));
+            apis.ForEach(a => ApiTree.Add(a.Path, a.Method, new RestSubscriberFile()));
         }
 
         public void ProcessRequest(RestRequestContext context)
         {
+            var subscriber = ApiTree.Find(context.Url, context.Method) as RestSubscriberBase;
+            var response = subscriber.ProcessRequest(context.Url);
+            context.HttpContext.Response.WriteAsync(response);
         }
     }
 }

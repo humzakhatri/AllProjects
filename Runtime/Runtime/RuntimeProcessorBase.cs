@@ -16,13 +16,14 @@ namespace Runtime.Runtime
             OnInitialize();
         }
 
-        public virtual void Process()
-        {
-        }
-
         public void Start()
         {
             OnStart();
+        }
+
+        public void Close()
+        {
+
         }
 
         public void Terminate()

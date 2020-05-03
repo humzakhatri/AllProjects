@@ -7,6 +7,8 @@ namespace Framework.REST.EndPoint
 {
     public abstract class ApiTreeNodeBase
     {
+        object Tag { get; set; }
+
         public string Value { get; set; }
 
         public HttpMethod Method { get; set; }
@@ -27,11 +29,11 @@ namespace Framework.REST.EndPoint
             return value == Value;
         }
 
-        public void Add(string[] splitPath, HttpMethod method, int startAt = 0)
+        public void Add(string[] splitPath, HttpMethod method, object tag, int startAt = 0)
         {
             if (splitPath.Length - 1 == startAt)
             {
-                var leaf = CreateNode(splitPath[startAt], method);
+                var leaf = CreateNode(splitPath[startAt], tag, method);
                 Children.Add(leaf);
             }
             else
@@ -39,10 +41,10 @@ namespace Framework.REST.EndPoint
                 var found = Children.FirstOrDefault(n => Value == splitPath[startAt]);
                 if (found == null)
                 {
-                    found = CreateNode(splitPath[startAt]);
+                    found = CreateNode(splitPath[startAt], tag);
                     Children.Add(found);
                 }
-                found.Add(splitPath, method, startAt + 1);
+                found.Add(splitPath, method, tag, startAt + 1);
             }
         }
 
@@ -62,35 +64,35 @@ namespace Framework.REST.EndPoint
             }
         }
 
-        public string MatchRequest(string[] splitPath, HttpMethod method, int startAt = 0)
+        public object MatchRequest(string[] splitPath, HttpMethod method, int startAt = 0)
         {
             if (splitPath.Length - 1 == startAt)
             {
                 var leaf = Children.FirstOrDefault(n => n.MatchesValue(splitPath[startAt]) && n.Method == method);
-                if (leaf != null) return leaf.Value;
+                if (leaf != null) return leaf.Tag;
             }
             else
             {
                 var found = Children.FirstOrDefault(n => n.MatchesValue(splitPath[startAt]));
                 if (found != null)
-                    return RestHelper.MergeUrl(found.Value, MatchRequest(splitPath, method, startAt + 1));
+                    return MatchRequest(splitPath, method, startAt + 1);
             }
             throw new Exception("Request not matched");
         }
 
-        public static ApiTreeNodeBase CreateNode(string value)
+        public static ApiTreeNodeBase CreateNode(string value, object tag)
         {
             if (string.IsNullOrEmpty(value))
                 throw new Exception("Value cannot be empty or null");
 
             if (value.StartsWith('{') && value.EndsWith('}'))
-                return new ApiTreeNodeParameter(value);
-            return new ApiTreeNodeConstant(value);
+                return new ApiTreeNodeParameter(value) { Tag = tag };
+            return new ApiTreeNodeConstant(value) { Tag = tag };
         }
 
-        public static ApiTreeNodeBase CreateNode(string value, HttpMethod method)
+        public static ApiTreeNodeBase CreateNode(string value, object tag, HttpMethod method)
         {
-            var node = CreateNode(value);
+            var node = CreateNode(value, tag);
             node.Method = method;
             return node;
         }

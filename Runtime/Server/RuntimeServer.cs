@@ -22,7 +22,7 @@ namespace Runtime.Server
 
         public void ProcessRestRequest(RestRequestContext context)
         {
-
+            ServerComponentApiEndpoint.ProcessRequest(context);
         }
     }
 }

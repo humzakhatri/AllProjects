@@ -6,9 +6,9 @@ namespace Framework.Interfaces
 {
     public interface IProcessor
     {
-        void Process();
         void Initialize();
         void Start();
+        void Close();
         void Terminate();
     }
 }
