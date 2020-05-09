@@ -14,4 +14,8 @@
     <ProjectReference Include="..\Localizable\Localizable.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Tests\" />
+  </ItemGroup>
+
 </Project>

@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RestServer.Middlewares;
+using Runtime.Persisters;
 using Runtime.Server;
 
 namespace RestServer
@@ -30,6 +31,7 @@ namespace RestServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSingleton(typeof(ApiConfigurationPersister));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

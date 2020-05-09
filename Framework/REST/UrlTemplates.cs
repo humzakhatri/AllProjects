@@ -6,6 +6,10 @@ namespace Framework.REST
 {
     public static class UrlTemplates
     {
-        public const string TServerController = "api";
+        public const string TServerController = "Server";
+        public const string TApiConfigurationController = "ApiConfiguration";
+
+        public const string TId = "{id}";
+        public const string TAll = "all";
     }
 }

@@ -8,9 +8,9 @@ namespace Runtime.REST
 {
     internal abstract class RestSubscriberBase : RuntimeProcessorBase
     {
-        public virtual string ProcessRequest(string resolvedResource)
+        public virtual string ProcessRequest(RestRequestContext context)
         {
-            return resolvedResource;
+            return context.Url;
         }
     }
 }

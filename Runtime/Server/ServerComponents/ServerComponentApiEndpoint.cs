@@ -1,5 +1,6 @@
 ﻿using Framework.REST.EndPoint;
 using Microsoft.AspNetCore.Http;
+using Runtime.Persisters;
 using Runtime.REST;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,10 @@ namespace Runtime.Server.ServerComponents
     {
         private static string ConfigFilePath = @"C:\Data\Config.xml";
         private ApiTree ApiTree { get; set; } = new ApiTree();
+        private readonly ApiConfigurationPersister Persister;
         public ServerComponentApiEndpoint()
         {
+            Persister = new ApiConfigurationPersister();
         }
 
         protected override void OnInitialize()
