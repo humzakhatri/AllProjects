@@ -38,5 +38,11 @@ namespace RestServer.Controllers
         {
             Persister.Update(apiConfiguration);
         }
+
+        [HttpDelete(TId)]
+        public void DeleteApiConfiguration(long id)
+        {
+            Persister.Delete(id);
+        }
     }
 }

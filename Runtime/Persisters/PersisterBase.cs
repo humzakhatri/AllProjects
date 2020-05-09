@@ -10,5 +10,6 @@ namespace Runtime.Persisters
         public abstract IEnumerable<T> Load();
         public abstract void Save(T obj);
         public abstract void Update(T obj);
+        public abstract void Delete(long id);
     }
 }

@@ -62,6 +62,7 @@ namespace Runtime.Persisters
 
         public override void Save(ApiConfiguration obj)
         {
+            if (_Configurations.Any(c => c.Id == obj.Id)) throw new Exception("Item Already exists.");
             _Configurations.Add(obj);
             SaveToFile();
         }
@@ -72,6 +73,11 @@ namespace Runtime.Persisters
             if (existing == null) throw new Exception("Object does not exist.");
             _Configurations.Remove(existing);
             _Configurations.Add(obj);
+        }
+
+        public override void Delete(long id)
+        {
+            _Configurations.RemoveAll(c => c.Id == id);
         }
     }
 }
