@@ -11,8 +11,6 @@ namespace Framework.REST.EndPoint
 
         public string Value { get; set; }
 
-        public HttpMethod Method { get; set; }
-
         public List<string> QueryParameters { get; set; } = new List<string>();
 
         public List<ApiTreeNodeBase> Children { get; set; } = new List<ApiTreeNodeBase>();
@@ -31,14 +29,14 @@ namespace Framework.REST.EndPoint
 
         public void Add(string[] splitPath, HttpMethod method, object tag, int startAt = 0)
         {
-            if (splitPath.Length - 1 == startAt)
+            if (splitPath.Length == startAt)
             {
-                var leaf = CreateNode(splitPath[startAt], tag, method);
+                var leaf = CreateNode(method, tag);
                 Children.Add(leaf);
             }
             else
             {
-                var found = Children.FirstOrDefault(n => Value == splitPath[startAt]);
+                var found = Children.FirstOrDefault(n => n.MatchesValue(splitPath[startAt]));
                 if (found == null)
                 {
                     found = CreateNode(splitPath[startAt], tag);
@@ -50,9 +48,9 @@ namespace Framework.REST.EndPoint
 
         public void Remove(string[] splitPath, HttpMethod method, int startAt = 0)
         {
-            if (splitPath.Length - 1 == startAt)
+            if (splitPath.Length == startAt)
             {
-                var leaf = Children.FirstOrDefault(n => n.Value == splitPath[startAt] && n.Method == method);
+                var leaf = Children.FirstOrDefault(n => n.MatchesValue(method.ToString()));
                 if (leaf != null) Children.Remove(leaf);
                 return;
             }
@@ -66,19 +64,28 @@ namespace Framework.REST.EndPoint
 
         public bool TryMatchRequest(string[] splitPath, HttpMethod method, out object result, int startAt = 0)
         {
-            if (splitPath.Length - 1 == startAt)
+            if (splitPath.Length == startAt)
             {
-                var leaf = Children.FirstOrDefault(n => n.MatchesValue(splitPath[startAt]) && n.Method == method);
-                if (leaf != null) result = leaf.Tag;
+                var leaf = Children.FirstOrDefault(n => n.MatchesValue(method.ToString()));
+                if (leaf != null)
+                {
+                    result = leaf.Tag;
+                    return true;
+                }
             }
             else
             {
                 var found = Children.FirstOrDefault(n => n.MatchesValue(splitPath[startAt]));
                 if (found != null)
-                    return TryMatchRequest(splitPath, method, out result, startAt + 1);
+                    return found.TryMatchRequest(splitPath, method, out result, startAt + 1);
             }
             result = new object();
             return false;
+        }
+
+        public static ApiTreeNodeBase CreateNode(HttpMethod method, object tag)
+        {
+            return new ApiTreeNodeMethod(method) { Tag = tag };
         }
 
         public static ApiTreeNodeBase CreateNode(string value, object tag)
@@ -89,13 +96,6 @@ namespace Framework.REST.EndPoint
             if (value.StartsWith('{') && value.EndsWith('}'))
                 return new ApiTreeNodeParameter(value) { Tag = tag };
             return new ApiTreeNodeConstant(value) { Tag = tag };
-        }
-
-        public static ApiTreeNodeBase CreateNode(string value, object tag, HttpMethod method)
-        {
-            var node = CreateNode(value, tag);
-            node.Method = method;
-            return node;
         }
     }
 
@@ -117,6 +117,18 @@ namespace Framework.REST.EndPoint
         public ApiTreeNodeConstant() { }
         public ApiTreeNodeConstant(string value) : base(value)
         {
+        }
+    }
+
+    public class ApiTreeNodeMethod : ApiTreeNodeBase
+    {
+        public ApiTreeNodeMethod(HttpMethod method)
+        {
+            Value = method.ToString();
+        }
+        public override bool MatchesValue(string value)
+        {
+            return string.Compare(value, Value, true) == 0;
         }
     }
 }

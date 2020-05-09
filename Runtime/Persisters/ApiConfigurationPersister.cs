@@ -1,4 +1,5 @@
-﻿using Framework.REST.EndPoint;
+﻿using Framework.REST;
+using Framework.REST.EndPoint;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +12,7 @@ namespace Runtime.Persisters
     public class ApiConfigurationPersister : PersisterBase<ApiConfiguration>
     {
         private static string ConfigFilePath = @"C:\Data\Config.xml";
-        private ApiConfigurationList _Configurations;
+        private List<ApiConfiguration> _Configurations;
         public ApiConfigurationPersister()
         {
             LoadFromFile();
@@ -21,22 +22,30 @@ namespace Runtime.Persisters
         {
             if (File.Exists(ConfigFilePath) == false)
                 File.Create(ConfigFilePath);
-            var serializer = new XmlSerializer(typeof(ApiConfigurationList));
+            else return;
+            var serializer = new XmlSerializer(typeof(List<ApiConfiguration>));
             using (var writer = new StreamWriter(ConfigFilePath))
-                serializer.Serialize(writer, new ApiConfigurationList());
+                serializer.Serialize(writer, BuildDummyObject());
+        }
+
+        private List<ApiConfiguration> BuildDummyObject()
+        {
+            var qp = new List<string>();
+            qp.Add("param");
+            return new List<ApiConfiguration>() { new ApiConfiguration() { Id = 0, Method = HttpMethod.Post, Path = "/api/whatever", QueryParameters = qp } };
         }
 
         private void LoadFromFile()
         {
             CreateNewIfDoesntExist();
-            var serializer = new XmlSerializer(typeof(ApiConfigurationList));
+            var serializer = new XmlSerializer(typeof(List<ApiConfiguration>));
             using (var reader = new StreamReader(ConfigFilePath))
-                _Configurations = (ApiConfigurationList)serializer.Deserialize(reader);
+                _Configurations = (List<ApiConfiguration>)serializer.Deserialize(reader);
         }
 
         private void SaveToFile()
         {
-            var serializer = new XmlSerializer(typeof(ApiConfigurationList));
+            var serializer = new XmlSerializer(typeof(List<ApiConfiguration>));
             using (var writer = new StreamWriter(ConfigFilePath))
                 serializer.Serialize(writer, _Configurations);
         }
@@ -46,7 +55,7 @@ namespace Runtime.Persisters
             return _Configurations[(int)id];
         }
 
-        public  override IEnumerable<ApiConfiguration> Load()
+        public override IEnumerable<ApiConfiguration> Load()
         {
             return _Configurations;
         }
@@ -57,7 +66,7 @@ namespace Runtime.Persisters
             SaveToFile();
         }
 
-        public  override void Update(ApiConfiguration obj)
+        public override void Update(ApiConfiguration obj)
         {
             var existing = _Configurations.FirstOrDefault(c => c.Id == obj.Id);
             if (existing == null) throw new Exception("Object does not exist.");
