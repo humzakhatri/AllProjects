@@ -5,6 +5,7 @@ using Runtime.REST;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -14,14 +15,11 @@ namespace Runtime.Server.ServerComponents
     {
         private static string ConfigFilePath = @"C:\Data\Config.xml";
         private ApiTree ApiTree { get; set; } = new ApiTree();
-        private readonly ApiConfigurationPersister Persister;
-        public ServerComponentApiEndpoint()
-        {
-            Persister = new ApiConfigurationPersister();
-        }
+        private ApiConfigurationPersister Persister;
 
         protected override void OnInitialize()
         {
+            Persister = new ApiConfigurationPersister();
             LoadConfiguration();
         }
 
@@ -31,23 +29,24 @@ namespace Runtime.Server.ServerComponents
 
         private void LoadConfiguration()
         {
-            ApiConfigurationList apis;
-            var serializer = new XmlSerializer(typeof(ApiConfigurationList));
-            using (var reader = new StreamReader(ConfigFilePath))
-                apis = (ApiConfigurationList)serializer.Deserialize(reader);
+            var apis = Persister.Load();
             LoadApisToTree(apis);
         }
 
-        private void LoadApisToTree(ApiConfigurationList apis)
+        private void LoadApisToTree(IEnumerable<ApiConfiguration> apis)
         {
-            apis.ForEach(a => ApiTree.Add(a.Path, a.Method, new RestSubscriberFile()));
+            apis.ToList().ForEach(a => ApiTree.Add(a.Path, a.Method, new RestSubscriberFile()));
         }
 
-        public void ProcessRequest(RestRequestContext context)
+        public bool ProcessRequest(RestRequestContext context)
         {
-            var subscriber = ApiTree.Find(context.Url, context.Method) as RestSubscriberBase;
-            var response = subscriber.ProcessRequest(context.Url);
+            if (ApiTree.TryMatch(context.Url, context.Method, out var result) == false)
+                return false;
+
+            var subscriber = result as RestSubscriberBase;
+            var response = subscriber.ProcessRequest(context);
             context.HttpContext.Response.WriteAsync(response);
+            return true;
         }
     }
 }

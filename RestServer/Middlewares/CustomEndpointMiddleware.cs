@@ -29,8 +29,8 @@ namespace RestServer.Middlewares
 
         private Task<bool> Handle(HttpContext context)
         {
-            Startup.Bootstrap.RuntimeServer.ProcessRestRequest(new RestRequestContext(context));
-            var task = new Task<bool>(() => false);
+            var result = Startup.Bootstrap.RuntimeServer.ProcessRestRequest(new RestRequestContext(context));
+            var task = new Task<bool>(() => result);
             task.Start();
             return task;
         }

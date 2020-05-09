@@ -20,9 +20,9 @@ namespace Runtime.Server
         {
         }
 
-        public void ProcessRestRequest(RestRequestContext context)
+        public bool ProcessRestRequest(RestRequestContext context)
         {
-            ServerComponentApiEndpoint.ProcessRequest(context);
+            return ServerComponentApiEndpoint.ProcessRequest(context);
         }
     }
 }

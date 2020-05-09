@@ -17,10 +17,10 @@ namespace Framework.REST.EndPoint
             Top.Remove(RestHelper.CleanResource(path).Split('/'), method);
         }
 
-        public object Find(string path, HttpMethod method)
+        public bool TryMatch(string path, HttpMethod method, out object result)
         {
             var tokens = RestHelper.CleanResource(path).Split('/');
-            return Top.MatchRequest(tokens, method);
+            return Top.TryMatchRequest(tokens, method, out result);
         }
     }
 }

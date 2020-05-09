@@ -15,7 +15,7 @@ namespace Framework.REST.EndPoint
 
         public List<string> QueryParameters { get; set; } = new List<string>();
 
-        public List<ApiTreeNodeBase> Children { get; set; }
+        public List<ApiTreeNodeBase> Children { get; set; } = new List<ApiTreeNodeBase>();
 
         public ApiTreeNodeBase() { }
 
@@ -64,20 +64,21 @@ namespace Framework.REST.EndPoint
             }
         }
 
-        public object MatchRequest(string[] splitPath, HttpMethod method, int startAt = 0)
+        public bool TryMatchRequest(string[] splitPath, HttpMethod method, out object result, int startAt = 0)
         {
             if (splitPath.Length - 1 == startAt)
             {
                 var leaf = Children.FirstOrDefault(n => n.MatchesValue(splitPath[startAt]) && n.Method == method);
-                if (leaf != null) return leaf.Tag;
+                if (leaf != null) result = leaf.Tag;
             }
             else
             {
                 var found = Children.FirstOrDefault(n => n.MatchesValue(splitPath[startAt]));
                 if (found != null)
-                    return MatchRequest(splitPath, method, startAt + 1);
+                    return TryMatchRequest(splitPath, method, out result, startAt + 1);
             }
-            throw new Exception("Request not matched");
+            result = new object();
+            return false;
         }
 
         public static ApiTreeNodeBase CreateNode(string value, object tag)

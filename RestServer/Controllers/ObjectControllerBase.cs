@@ -15,7 +15,7 @@ namespace RestServer.Controllers
         {
             Persister = persister;
         }
-
+        [HttpGet(TId)]
         public T GetApiConfiguration(long id)
         {
             return Persister.Load(id);
