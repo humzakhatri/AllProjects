@@ -9,7 +9,7 @@ namespace Runtime.Layout
     public class DelimitedLayoutBuilder
     {
         private readonly FileLayoutBuilderOptions BuilderOptions;
-        private string[] Header;
+        private DelimitedLine Header;
         private MetaBase Layout { get; set; }
         public DelimitedLayoutBuilder(FileLayoutBuilderOptions builderOptions)
         {
@@ -23,7 +23,7 @@ namespace Runtime.Layout
 
         private void ReadHeaderFromFile()
         {
-            using (var reader = new DelimitedReader())
+            using (var reader = new DelimitedReader(BuilderOptions.FilePath))
             {
                 reader.Read();
                 Header = reader.Header;
@@ -33,17 +33,16 @@ namespace Runtime.Layout
         private void BuildLayout()
         {
             Layout = new MetaFlatObject();
-            foreach (var column in Header)
+            foreach (var column in Header.Data)
             {
                 var element = new MetaElement() { Name = column };
                 Layout.Elements.Add(element);
             }
         }
-
     }
 
     public class FileLayoutBuilderOptions
     {
-        private string FilePath { get; set; }
+        public string FilePath { get; set; }
     }
 }

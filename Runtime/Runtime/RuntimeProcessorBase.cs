@@ -33,5 +33,10 @@ namespace Runtime.Runtime
         public void Terminate()
         {
         }
+
+        public void Dispose()
+        {
+
+        }
     }
 }

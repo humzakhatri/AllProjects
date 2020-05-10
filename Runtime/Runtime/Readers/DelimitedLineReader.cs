@@ -5,13 +5,14 @@ using System.Text;
 
 namespace Runtime.Runtime.Readers
 {
-    public class DelimitedLineReader
+    public class DelimitedLineReader : IDisposable
     {
         private CharReader CharReader;
-        public string Next { get; private set; } = null;
+        public DelimitedLine Next { get; private set; } = null;
         public char LineDelimiter { get; set; } = '\n';
-        public string Record { get; private set; } = null;
+        public char FieldDelimiter { get; set; } = ',';
         public long RecordLength { get; private set; }
+        public bool EOF { get; private set; } = false;
         public DelimitedLineReader(TextReader reader)
         {
             CharReader = new CharReader(reader);
@@ -20,18 +21,43 @@ namespace Runtime.Runtime.Readers
         public void ReadNext()
         {
             StringBuilder sb = new StringBuilder();
+            var line = new DelimitedLine(FieldDelimiter);
             do
             {
                 CharReader.ReadNext();
-                if (CharReader.EOF || CharReader.Next == LineDelimiter)
+                bool isEnd = CharReader.EOF || CharReader.Next == LineDelimiter;
+                if (CharReader.Next == FieldDelimiter || isEnd)
                 {
-                    Record = sb.ToString();
-                    return;
+                    line.Data.Add(sb.ToString());
+                    sb.Clear();
                 }
+                if (isEnd)
+                {
+                    Next = line;
+                    EOF = CharReader.EOF;
+                    break;
+                }
+
                 sb.Append(CharReader.Next);
                 RecordLength++;
             }
             while (true);
+        }
+
+        public void Dispose()
+        {
+            CharReader.Dispose();
+        }
+    }
+
+    public class DelimitedLine
+    {
+        public readonly char Delimiter;
+        public char Seperator;
+        public List<string> Data { get; private set; } = new List<string>();
+        public DelimitedLine(char delimiter)
+        {
+            Delimiter = delimiter;
         }
     }
 }
