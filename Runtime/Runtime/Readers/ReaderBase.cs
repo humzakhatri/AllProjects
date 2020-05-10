@@ -7,39 +7,15 @@ namespace Runtime.Runtime.Readers
 {
     internal abstract class ReaderBase : IReader
     {
-        public void Initialize()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Process()
-        {
-            throw new NotImplementedException();
-        }
-
+        public string[] Header;
         public void Read()
         {
             throw new NotImplementedException();
         }
 
-        public void ReadNext()
+        public void Dispose()
         {
-            throw new NotImplementedException();
-        }
 
-        public void Start()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Close()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Terminate()
-        {
-            throw new NotImplementedException();
         }
     }
 }

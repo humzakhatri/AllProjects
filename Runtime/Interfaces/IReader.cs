@@ -5,9 +5,8 @@ using System.Text;
 
 namespace Runtime.Interfaces
 {
-    interface IReader : IProcessor
+    interface IReader : IDisposable
     {
         void Read();
-        void ReadNext();
     }
 }

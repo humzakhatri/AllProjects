@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Framework.Interfaces
 {
-    public interface IProcessor
+    public interface IProcessor : IDisposable
     {
         void Initialize();
         void Start();
