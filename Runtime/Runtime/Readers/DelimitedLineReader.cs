@@ -9,14 +9,12 @@ namespace Runtime.Runtime.Readers
     {
         private CharReader CharReader;
         public string Next { get; private set; } = null;
-        private char Delimiter;
         public char LineDelimiter { get; set; } = '\n';
         public string Record { get; private set; } = null;
         public long RecordLength { get; private set; }
-        public DelimitedLineReader(TextReader reader, char delimiter)
+        public DelimitedLineReader(TextReader reader)
         {
             CharReader = new CharReader(reader);
-            Delimiter = delimiter;
         }
 
         public void ReadNext()

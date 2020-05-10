@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Runtime.Runtime.Readers
 {
-    public class CharReader
+    public class CharReader : IDisposable
     {
         private TextReader Reader;
         public long count = 0;
@@ -23,6 +23,12 @@ namespace Runtime.Runtime.Readers
                 EOF = true;
             else
                 Next = (char)read;
+        }
+
+        public void Dispose()
+        {
+            Reader.Close();
+            Reader.Dispose();
         }
     }
 }

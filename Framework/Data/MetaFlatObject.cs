@@ -6,8 +6,8 @@ namespace Framework.Data
 {
     public class MetaFlatObject : MetaBase
     {
-        public override bool IsCollection => true;
         public override bool IsHierarchical => false;
-        public List<MetaElement> Elements { get; set; }
+        public override List<MetaCollection> Collection { get => throw new Exception("Can't house collections."); set => throw new Exception("Can't house collections."); }
+        public override List<MetaObject> Children { get => throw new Exception("Can't house objects."); set => throw new Exception("Can't house objects."); }
     }
 }
