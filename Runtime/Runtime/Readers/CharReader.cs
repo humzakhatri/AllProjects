@@ -19,7 +19,7 @@ namespace Runtime.Runtime.Readers
         public void ReadNext()
         {
             var read = Reader.Read();
-            if (read == 0)
+            if (read == 0 || read == -1)
                 EOF = true;
             else
                 Next = (char)read;

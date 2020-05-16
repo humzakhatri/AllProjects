@@ -2,15 +2,21 @@
 using Framework.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Runtime.Data
 {
-    internal class DataField : INamed
+    [DebuggerDisplay("{Name}=>{Value}")]
+    internal class DataField : IDataField
     {
         public string Value { get; set; }
         public MetaElement Meta { get; set; }
         public string Name { get => Meta.Name; set { throw new Exception("Should not set meta name from field."); } }
     }
 
+    internal class Record : List<DataField>
+    {
+
+    }
 }

@@ -1,14 +1,17 @@
 ﻿using Framework.Data;
+using Framework.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Runtime.Data
 {
-    internal abstract class DataCollection
+    internal abstract class DataCollection : IDataCollectionObject
     {
-        private MetaBase _Meta;
-        public virtual MetaBase Meta { get => _Meta; protected set { _Meta = value; } }
+        protected MetaBase _Meta;
+        public virtual MetaBase Meta { get => _Meta; }
+        public string Name { get => Meta.Name; set => throw new Exception("Should Not set the name from here."); }
+
         protected DataCollection() { }
         public static DataCollection Create(MetaBase meta)
         {
@@ -23,6 +26,8 @@ namespace Runtime.Data
             return instance;
         }
 
-        protected abstract void SetMeta(MetaBase meta);
+        public abstract void SetMeta(MetaBase meta);
+
+        public abstract void AddValue(int index, string fieldName, string value);
     }
 }

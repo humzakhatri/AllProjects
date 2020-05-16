@@ -7,12 +7,18 @@ namespace Runtime.Data
 {
     internal class DataObjectCollection : DataCollection
     {
-        public List<DataObject> Objects { get; protected set; } = new List<DataObject>();
-        protected override void SetMeta(MetaBase meta)
+        public List<DataObjectRecord> Objects { get; protected set; } = new List<DataObjectRecord>();
+
+        public override void SetMeta(MetaBase meta)
         {
             if (meta.IsObjectCollection == false)
                 throw new Exception("Meta object is not compatible.");
-            Meta = meta;
+            _Meta = meta;
+        }
+
+        public override void AddValue(int index, string fieldName, string value)
+        {
+            throw new Exception("Cannot set value in a Object collection.");
         }
 
     }

@@ -25,7 +25,7 @@ namespace Runtime.Layout
         {
             using (var reader = new DelimitedReader(BuilderOptions.FilePath))
             {
-                reader.Read();
+                reader.ReadHeader();
                 Header = reader.Header;
             }
         }

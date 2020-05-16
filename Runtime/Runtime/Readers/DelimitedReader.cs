@@ -1,4 +1,6 @@
-﻿using Runtime.Interfaces;
+﻿using Framework.Data;
+using Runtime.Data;
+using Runtime.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,8 +10,9 @@ namespace Runtime.Runtime.Readers
 {
     internal class DelimitedReader : ReaderBase
     {
+        private MetaBase Layout;
         public DelimitedLine Header { get; private set; }
-        public List<DelimitedLine> Data { get; private set; } = new List<DelimitedLine>();
+        public List<DelimitedLine> Line { get; private set; } = new List<DelimitedLine>();
         private bool HeaderRead = false;
         private string FilePath;
         private DelimitedLineReader DelimitedLineReader;
@@ -19,11 +22,30 @@ namespace Runtime.Runtime.Readers
             DelimitedLineReader = new DelimitedLineReader(CreateTextReader());
         }
 
+        public DelimitedReader(string filePath, MetaBase layout) : this(filePath)
+        {
+            Layout = layout;
+        }
+
         private TextReader CreateTextReader()
         {
             var stream = new FileStream(FilePath, FileMode.Open);
             var reader = new StreamReader(stream);
             return reader;
+        }
+
+        private void ReadToLayout()
+        {
+            if (Layout == null) throw new Exception("Layout not present.");
+            var result = new DataFieldCollection();
+            result.SetMeta(Layout);
+            for (int i = 0; i < Line.Count; i++)
+            {
+                for (int j = 0; j < Header.Data.Count; j++)
+                {
+                    result.AddValue(i, Header.Data[j], Line[i].Data[j]);
+                }
+            }
         }
 
         public void ReadHeader()
@@ -40,9 +62,10 @@ namespace Runtime.Runtime.Readers
             {
                 DelimitedLineReader.ReadNext();
                 if (DelimitedLineReader.EOF) break;
-                Data.Add(DelimitedLineReader.Next);
+                Line.Add(DelimitedLineReader.Next);
 
             } while (true);
+            ReadToLayout();
         }
 
         public override void Dispose()

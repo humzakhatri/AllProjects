@@ -37,8 +37,8 @@ namespace Runtime.Runtime.Readers
                     EOF = CharReader.EOF;
                     break;
                 }
-
-                sb.Append(CharReader.Next);
+                if (CharReader.Next != FieldDelimiter)
+                    sb.Append(CharReader.Next);
                 RecordLength++;
             }
             while (true);

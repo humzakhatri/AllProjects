@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Runtime.Data
 {
-    internal class DataObject : INamed
+    internal class DataObject : IDataObject
     {
         private MetaBase _Meta;
         public DataField[] Fields { get; set; }
@@ -14,23 +14,27 @@ namespace Runtime.Data
         public DataCollection[] Collection { get; set; }
         public MetaBase Meta
         {
-            get => _Meta; set
-            {
-                SetMeta(value);
-            }
+            get => _Meta;
         }
         public bool IsHierarchical => Meta.IsHierarchical;
 
         public string Name { get => Meta.Name; set => throw new Exception("Should not set meta name from data object."); }
 
         private DataObject() { }
-        public static void Create(MetaBase meta)
+        public static IDataObject Create(MetaBase meta)
         {
-            var obj = new DataObject();
-            obj.Meta = meta;
+            IDataObject obj;
+            if (meta.IsFieldCollection)
+                obj = new DataFieldCollection();
+            else if (meta.IsObjectCollection)
+                obj = new DataObjectCollection();
+            else
+                obj = new DataObject();
+            obj.SetMeta(meta);
+            return obj;
         }
 
-        private void SetMeta(MetaBase meta)
+        public void SetMeta(MetaBase meta)
         {
             if (meta.Elements.Count > 0)
             {
@@ -52,5 +56,28 @@ namespace Runtime.Data
             }
             _Meta = meta;
         }
+
+        public void SetValue(string name, string value)
+        {
+            foreach (var field in Fields)
+            {
+                if (field.Name == name)
+                {
+                    field.Value = value;
+                    return;
+                }
+            }
+            throw new Exception(string.Format("Field {0} does not exist in {1}.", name, Name));
+        }
+
+        public void SetReferenced(IDataObject value)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class DataObjectRecord : List<DataObject>
+    {
+
     }
 }
