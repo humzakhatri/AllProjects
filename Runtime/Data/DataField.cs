@@ -8,14 +8,14 @@ using System.Text;
 namespace Runtime.Data
 {
     [DebuggerDisplay("{Name}=>{Value}")]
-    internal class DataField : IDataField
+    public class DataField : IDataField
     {
         public string Value { get; set; }
         public MetaElement Meta { get; set; }
         public string Name { get => Meta.Name; set { throw new Exception("Should not set meta name from field."); } }
     }
 
-    internal class Record : List<DataField>
+    public class Record : List<DataField>
     {
 
     }

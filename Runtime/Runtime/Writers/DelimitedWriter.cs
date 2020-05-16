@@ -9,10 +9,8 @@ using System.Text;
 
 namespace Runtime.Runtime.Writers
 {
-    internal class DelimitedWriter : IFileWriter
+    internal class DelimitedWriter : WriterBase
     {
-        public string Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
         public bool IncludeHeader { get; set; } = true;
         private TextWriter Writer;
         public char FieldDelimiter { get; set; } = ',';
@@ -21,7 +19,7 @@ namespace Runtime.Runtime.Writers
             Writer = new StreamWriter(stream);
         }
 
-        public void Write(IDataObject dataObject)
+        public override void Write(IDataObject dataObject)
         {
             if (!(dataObject is DataFieldCollection obj)) throw new Exception("DataObject is null or has incompatible type.");
             if (IncludeHeader)
@@ -45,7 +43,7 @@ namespace Runtime.Runtime.Writers
             Writer.WriteLine(sb.ToString());
         }
 
-        public void Write(Record record)
+        public override void Write(Record record)
         {
             if (record == null) throw new Exception("Record is null");
             var sb = new StringBuilder();
@@ -60,7 +58,7 @@ namespace Runtime.Runtime.Writers
             Writer.WriteLine(sb.ToString());
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             Writer.Dispose();
         }

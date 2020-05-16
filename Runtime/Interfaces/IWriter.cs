@@ -4,12 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Runtime.Runtime.Writers
+namespace Runtime.Interfaces
 {
-    internal interface IFileWriter : INamed, IDisposable
+    public interface IWriter : INamed, IDisposable
     {
         void Write(IDataObject obj);
-
         void Write(Record record);
     }
 }
