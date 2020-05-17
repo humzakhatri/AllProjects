@@ -12,6 +12,7 @@ namespace Runtime.Runtime.Readers
     {
         private MetaBase Layout;
         public DelimitedLine Header { get; private set; }
+        public DataFieldCollection Data { get; set; }
         public List<DelimitedLine> Line { get; private set; } = new List<DelimitedLine>();
         private bool HeaderRead = false;
         private string FilePath;
@@ -37,13 +38,13 @@ namespace Runtime.Runtime.Readers
         private void ReadToLayout()
         {
             if (Layout == null) throw new Exception("Layout not present.");
-            var result = new DataFieldCollection();
-            result.SetMeta(Layout);
+            Data = new DataFieldCollection();
+            Data.SetMeta(Layout);
             for (int i = 0; i < Line.Count; i++)
             {
                 for (int j = 0; j < Header.Data.Count; j++)
                 {
-                    result.AddValue(i, Header.Data[j], Line[i].Data[j]);
+                    Data.AddValue(i, Header.Data[j], Line[i].Data[j]);
                 }
             }
         }

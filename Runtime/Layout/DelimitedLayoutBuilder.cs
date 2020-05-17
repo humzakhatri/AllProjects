@@ -10,7 +10,7 @@ namespace Runtime.Layout
     {
         private readonly FileLayoutBuilderOptions BuilderOptions;
         private DelimitedLine Header;
-        private MetaBase Layout { get; set; }
+        public MetaBase Layout { get; set; }
         public DelimitedLayoutBuilder(FileLayoutBuilderOptions builderOptions)
         {
             BuilderOptions = builderOptions;
