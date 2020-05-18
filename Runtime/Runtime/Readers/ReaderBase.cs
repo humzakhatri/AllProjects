@@ -1,4 +1,5 @@
-﻿using Runtime.Interfaces;
+﻿using Runtime.Data;
+using Runtime.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,7 +8,7 @@ namespace Runtime.Runtime.Readers
 {
     internal abstract class ReaderBase : IReader
     {
-        public abstract void Read();
+        public abstract IEnumerable<Record> Read();
         public abstract void Dispose();
     }
 }

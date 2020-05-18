@@ -12,8 +12,8 @@ namespace Runtime.Runtime.Readers
     {
         private MetaBase Layout;
         public DelimitedLine Header { get; private set; }
-        public DataFieldCollection Data { get; set; }
-        public List<DelimitedLine> Line { get; private set; } = new List<DelimitedLine>();
+        public DelimitedLine Line { get; private set; }
+        private Record Record;
         private bool HeaderRead = false;
         private string FilePath;
         private DelimitedLineReader DelimitedLineReader;
@@ -38,14 +38,12 @@ namespace Runtime.Runtime.Readers
         private void ReadToLayout()
         {
             if (Layout == null) throw new Exception("Layout not present.");
-            Data = new DataFieldCollection();
-            Data.SetMeta(Layout);
-            for (int i = 0; i < Line.Count; i++)
+            Record = new Record();
+            for (int i = 0; i < Layout.Elements.Count; i++)
             {
-                for (int j = 0; j < Header.Data.Count; j++)
-                {
-                    Data.AddValue(i, Header.Data[j], Line[i].Data[j]);
-                }
+                var dataField = new DataField();
+                dataField.Meta = Layout.Elements[i];
+                dataField.Value = Line.Data[i];
             }
         }
 
@@ -56,17 +54,18 @@ namespace Runtime.Runtime.Readers
             HeaderRead = true;
         }
 
-        public override void Read()
+        public override IEnumerable<Record> Read()
         {
             if (HeaderRead == false) ReadHeader();
             do
             {
                 DelimitedLineReader.ReadNext();
                 if (DelimitedLineReader.EOF) break;
-                Line.Add(DelimitedLineReader.Next);
+                Line = DelimitedLineReader.Next;
+                ReadToLayout();
+                yield return Record;
 
             } while (true);
-            ReadToLayout();
         }
 
         public override void Dispose()
