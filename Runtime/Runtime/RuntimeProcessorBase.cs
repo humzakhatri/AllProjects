@@ -25,16 +25,16 @@ namespace Runtime.Runtime
             OnStart();
         }
 
-        public void Close()
+        public virtual void Close()
         {
 
         }
 
-        public void Terminate()
+        public virtual void Terminate()
         {
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
 
         }
