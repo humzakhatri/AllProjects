@@ -8,6 +8,6 @@ namespace Runtime.Interfaces
 {
     interface IReader : IDisposable
     {
-        IEnumerable<Record> Read();
+        IAsyncEnumerable<Record> Read();
     }
 }

@@ -8,6 +8,9 @@ namespace Runtime.Runtime.Readers
     public class DelimitedLineReader : IDisposable
     {
         private CharReader CharReader;
+        private bool InQoutes = false;
+        public bool HasQoutes { get; set; } = false;
+        private bool IgnoreDelimiter => InQoutes && HasQoutes;
         public DelimitedLine Next { get; private set; } = null;
         public char LineDelimiter { get; set; } = '\n';
         public char FieldDelimiter { get; set; } = ',';
@@ -26,13 +29,17 @@ namespace Runtime.Runtime.Readers
             {
                 CharReader.ReadNext();
                 bool isEnd = CharReader.EOF || CharReader.Next == LineDelimiter;
-                if (CharReader.Next == FieldDelimiter || isEnd)
+                if (HasQoutes && CharReader.Next == '"')
+                    InQoutes = !InQoutes;
+                if (CharReader.Next == FieldDelimiter && !IgnoreDelimiter)
                 {
                     line.Data.Add(sb.ToString());
                     sb.Clear();
                 }
                 if (isEnd)
                 {
+                    line.Data.Add(sb.ToString());
+                    sb.Clear();
                     Next = line;
                     EOF = CharReader.EOF;
                     break;

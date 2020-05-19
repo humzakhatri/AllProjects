@@ -8,7 +8,7 @@ namespace Runtime.Runtime.Readers
 {
     internal abstract class ReaderBase : IReader
     {
-        public abstract IEnumerable<Record> Read();
+        public abstract IAsyncEnumerable<Record> Read();
         public abstract void Dispose();
     }
 }

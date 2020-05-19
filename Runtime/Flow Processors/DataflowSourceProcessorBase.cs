@@ -1,8 +1,11 @@
 ﻿using Framework.Interfaces;
 using Runtime.Data;
+using Runtime.Flow_Processors;
+using Runtime.Interfaces;
 using Runtime.Runtime;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,15 +13,15 @@ using System.Threading.Tasks.Dataflow;
 
 namespace Runtime.Blocks
 {
-    internal abstract class DataflowSourceProcessorBase : RuntimeProcessorBase
+    internal abstract class DataflowSourceProcessorBase : FlowProcessorBase, IHasSourceBlock
     {
-        private BufferBlock<Record> SourceBlock;
+        private BufferBlock<Record> Block;
+        public ISourceBlock<Record> SourceBlock => Block;
         protected bool EOF;
-        public bool PreserverOrder { get; set; } = true;
         protected override void OnInitialize()
         {
             var options = new DataflowBlockOptions() { EnsureOrdered = PreserverOrder };
-            SourceBlock = new BufferBlock<Record>(options);
+            Block = new BufferBlock<Record>(options);
         }
 
         protected override void OnStart()
@@ -29,7 +32,7 @@ namespace Runtime.Blocks
             }
             catch (Exception ex)
             {
-
+                throw ex;
             }
         }
 
@@ -43,8 +46,8 @@ namespace Runtime.Blocks
         {
             try
             {
-                foreach (var record in GetRecords())
-                    await SourceBlock.SendAsync(record);
+                await foreach (var record in GetRecords())
+                    await Block.SendAsync(record);
             }
             catch (Exception ex)
             {
@@ -52,6 +55,17 @@ namespace Runtime.Blocks
             }
         }
 
-        protected abstract IEnumerable<Record> GetRecords();
+        private DataflowLinkOptions BuildLinkOptions()
+        {
+            return new DataflowLinkOptions() { PropagateCompletion = true };
+        }
+
+
+        public void LinkTo(IHasTargetBlock hasTargetBlock)
+        {
+            Block.LinkTo(hasTargetBlock.TargetBlock, BuildLinkOptions());
+        }
+
+        protected abstract IAsyncEnumerable<Record> GetRecords();
     }
 }

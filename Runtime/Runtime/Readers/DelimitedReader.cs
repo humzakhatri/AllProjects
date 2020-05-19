@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Runtime.Runtime.Readers
 {
@@ -12,8 +13,6 @@ namespace Runtime.Runtime.Readers
     {
         private MetaBase Layout;
         public DelimitedLine Header { get; private set; }
-        public DelimitedLine Line { get; private set; }
-        private Record Record;
         private bool HeaderRead = false;
         private string FilePath;
         private DelimitedLineReader DelimitedLineReader;
@@ -35,16 +34,17 @@ namespace Runtime.Runtime.Readers
             return reader;
         }
 
-        private void ReadToLayout()
+        private Record ReadToLayout(DelimitedLine line)
         {
             if (Layout == null) throw new Exception("Layout not present.");
-            Record = new Record();
+            var record = new Record();
             for (int i = 0; i < Layout.Elements.Count; i++)
             {
                 var dataField = new DataField();
                 dataField.Meta = Layout.Elements[i];
-                dataField.Value = Line.Data[i];
+                dataField.Value = line.Data[i];
             }
+            return record;
         }
 
         public void ReadHeader()
@@ -54,18 +54,19 @@ namespace Runtime.Runtime.Readers
             HeaderRead = true;
         }
 
-        public override IEnumerable<Record> Read()
+        public override async IAsyncEnumerable<Record> Read()
         {
             if (HeaderRead == false) ReadHeader();
             do
             {
-                DelimitedLineReader.ReadNext();
-                if (DelimitedLineReader.EOF) break;
-                Line = DelimitedLineReader.Next;
-                ReadToLayout();
-                yield return Record;
+                yield return await Task.Run(() =>
+                {
+                    DelimitedLineReader.ReadNext();
+                    var line = DelimitedLineReader.Next;
+                    return ReadToLayout(line);
+                });
 
-            } while (true);
+            } while (DelimitedLineReader.EOF == false);
         }
 
         public override void Dispose()

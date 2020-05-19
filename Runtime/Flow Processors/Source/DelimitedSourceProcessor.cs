@@ -24,10 +24,9 @@ namespace Runtime.Flow_Processors.Source
             base.OnInitialize();
             Reader = new DelimitedReader(ConfigData.FilePath);
         }
-        protected override IEnumerable<Record> GetRecords()
+        protected override IAsyncEnumerable<Record> GetRecords()
         {
-            foreach (var record in Reader.Read())
-                yield return record;
+            return Reader.Read();
         }
     }
 }
