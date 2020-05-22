@@ -1,4 +1,5 @@
 ﻿using Framework.ConfigData;
+using Framework.Interfaces;
 using Runtime.Data;
 using Runtime.Interfaces;
 using Runtime.Runtime.Writers;
@@ -14,9 +15,9 @@ namespace Runtime.Flow_Processors.Destination
     {
         private IWriter Writer;
         private readonly DelimitedDestinationConfigData ConfigData;
-        public DelimitedDestinationProcessor(DelimitedDestinationConfigData configData)
+        public DelimitedDestinationProcessor(IConfigData configData) : base(configData)
         {
-            ConfigData = configData;
+            ConfigData = (DelimitedDestinationConfigData)configData;
         }
 
         protected override async Task WriteRecord(Record record)

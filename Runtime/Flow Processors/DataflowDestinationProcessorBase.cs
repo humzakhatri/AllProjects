@@ -1,4 +1,5 @@
-﻿using Runtime.Data;
+﻿using Framework.Interfaces;
+using Runtime.Data;
 using Runtime.Interfaces;
 using Runtime.Runtime;
 using System;
@@ -13,7 +14,10 @@ namespace Runtime.Flow_Processors
     {
         private ActionBlock<Record> Block;
         public ITargetBlock<Record> TargetBlock => Block;
+        public DataflowDestinationProcessorBase(IConfigData configData) : base(configData)
+        {
 
+        }
         protected override void OnInitialize()
         {
             var options = new DataflowBlockOptions() { EnsureOrdered = PreserverOrder };

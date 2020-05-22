@@ -1,4 +1,5 @@
-﻿using Runtime.Data;
+﻿using Framework.Interfaces;
+using Runtime.Data;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks.Dataflow;
 
 namespace Runtime.Interfaces
 {
-    interface IHasSourceBlock
+    internal interface IHasSourceBlock : IHasBlock
     {
         ISourceBlock<Record> SourceBlock { get; }
         void LinkTo(IHasTargetBlock targetBlock);

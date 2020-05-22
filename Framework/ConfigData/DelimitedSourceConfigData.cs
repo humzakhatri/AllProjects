@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Framework.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,5 +9,6 @@ namespace Framework.ConfigData
     {
         public char FieldDelimiter { get; set; } = ',';
         public char LineDelimiter { get; set; } = '\n';
+        public override SourceConfigType SourceConfigType => SourceConfigType.Delimited;
     }
 }

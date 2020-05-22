@@ -18,6 +18,10 @@ namespace Runtime.Blocks
         private BufferBlock<Record> Block;
         public ISourceBlock<Record> SourceBlock => Block;
         protected bool EOF;
+        public DataflowSourceProcessorBase(IConfigData configData) : base(configData)
+        {
+
+        }
         protected override void OnInitialize()
         {
             var options = new DataflowBlockOptions() { EnsureOrdered = PreserverOrder };
@@ -33,6 +37,10 @@ namespace Runtime.Blocks
             catch (Exception ex)
             {
                 throw ex;
+            }
+            finally
+            {
+                Close();
             }
         }
 

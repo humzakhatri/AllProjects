@@ -1,4 +1,5 @@
 ﻿using Framework.ConfigData;
+using Framework.Interfaces;
 using Runtime.Blocks;
 using Runtime.Data;
 using Runtime.Interfaces;
@@ -15,9 +16,9 @@ namespace Runtime.Flow_Processors.Source
     {
         private IReader Reader;
         private readonly DelimitedSourceConfigData ConfigData;
-        public DelimitedSourceProcessor(DelimitedSourceConfigData configData)
+        public DelimitedSourceProcessor(IConfigData configData) : base(configData)
         {
-            ConfigData = configData;
+            ConfigData = (DelimitedSourceConfigData)configData;
         }
         protected override void OnInitialize()
         {
@@ -27,6 +28,11 @@ namespace Runtime.Flow_Processors.Source
         protected override IAsyncEnumerable<Record> GetRecords()
         {
             return Reader.Read();
+        }
+        public override void Close()
+        {
+            Reader.Dispose();
+            base.Close();
         }
     }
 }

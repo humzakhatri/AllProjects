@@ -1,14 +1,13 @@
 ﻿using Framework.Interfaces;
-using Runtime.Data;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks.Dataflow;
 
-namespace Runtime.Interfaces
+namespace Framework.Document
 {
-    internal interface IHasTargetBlock : IHasBlock
+    public class DataflowDocument
     {
-        ITargetBlock<Record> TargetBlock { get; }
+        public ISourceConfigData Source { get; set; }
     }
 }
