@@ -21,9 +21,8 @@ namespace Runtime.Runtime.Pipeline
                 chain.Initialize();
                 chain.Start();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
                 throw;
             }
         }
