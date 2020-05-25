@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Runtime.Flow_Processors.Source
@@ -16,14 +17,14 @@ namespace Runtime.Flow_Processors.Source
     {
         private IReader Reader;
         private readonly DelimitedSourceConfigData ConfigData;
-        public DelimitedSourceProcessor(IConfigData configData) : base(configData)
+        public DelimitedSourceProcessor(IConfigData configData, CancellationToken cancellationToken) : base(configData, cancellationToken)
         {
             ConfigData = (DelimitedSourceConfigData)configData;
         }
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            Reader = new DelimitedReader(ConfigData.FilePath);
+            Reader = new DelimitedReader(ConfigData.FilePath, ConfigData.Layout);
         }
         protected override IAsyncEnumerable<Record> GetRecords()
         {

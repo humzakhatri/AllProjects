@@ -3,14 +3,16 @@ using Runtime.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace Runtime.Flow_Processors
 {
     public abstract class FlowProcessorBase : RuntimeProcessorBase
     {
-        public FlowProcessorBase(IConfigData configData)
+        protected readonly CancellationToken CancellationToken;
+        public FlowProcessorBase(IConfigData configData, CancellationToken cancellationToken)
         {
-
+            CancellationToken = cancellationToken;
         }
         public bool PreserverOrder { get; set; } = true;
     }

@@ -9,10 +9,10 @@ namespace Runtime.Runtime.Readers
     {
         private CharReader CharReader;
         private bool InQoutes = false;
-        public bool HasQoutes { get; set; } = false;
+        public bool HasQoutes { get; set; } = true;
         private bool IgnoreDelimiter => InQoutes && HasQoutes;
         public DelimitedLine Next { get; private set; } = null;
-        public char LineDelimiter { get; set; } = '\n';
+        public char LineDelimiter { get; set; } = '\r';
         public char FieldDelimiter { get; set; } = ',';
         public long RecordLength { get; private set; }
         public bool EOF { get; private set; } = false;
@@ -44,11 +44,14 @@ namespace Runtime.Runtime.Readers
                     EOF = CharReader.EOF;
                     break;
                 }
-                if (CharReader.Next != FieldDelimiter)
+                if (CharReader.Next != FieldDelimiter || InQoutes)
                     sb.Append(CharReader.Next);
                 RecordLength++;
             }
             while (true);
+            while (CharReader.Peek == '\n' || CharReader.Peek == ' ' || CharReader.Peek == '\r' || CharReader.Peek == -1)
+                CharReader.ReadNext();
+            EOF = CharReader.EOF || CharReader.Peek == '\uffff';
         }
 
         public void Dispose()

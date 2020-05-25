@@ -18,7 +18,7 @@ namespace Runtime.Blocks
         private BufferBlock<Record> Block;
         public ISourceBlock<Record> SourceBlock => Block;
         protected bool EOF;
-        public DataflowSourceProcessorBase(IConfigData configData) : base(configData)
+        public DataflowSourceProcessorBase(IConfigData configData, CancellationToken cancellationToken) : base(configData, cancellationToken)
         {
 
         }
@@ -32,7 +32,8 @@ namespace Runtime.Blocks
         {
             try
             {
-                Task.Run(SendRecords);
+                var task = Task.Run(SendRecords);
+                task.Wait();
             }
             catch (Exception ex)
             {
@@ -54,6 +55,11 @@ namespace Runtime.Blocks
         {
             try
             {
+                if (CancellationToken.IsCancellationRequested)
+                {
+                    Block.Complete();
+                    return;
+                }
                 await foreach (var record in GetRecords())
                     await Block.SendAsync(record);
             }

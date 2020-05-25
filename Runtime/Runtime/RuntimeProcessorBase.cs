@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace Runtime.Runtime
 {
@@ -9,7 +10,6 @@ namespace Runtime.Runtime
     {
         public RuntimeProcessorBase()
         {
-            Initialize();
         }
         protected abstract void OnInitialize();
 

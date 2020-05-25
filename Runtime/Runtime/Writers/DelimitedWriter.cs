@@ -12,11 +12,13 @@ namespace Runtime.Runtime.Writers
     internal class DelimitedWriter : WriterBase
     {
         public bool IncludeHeader { get; set; } = true;
-        private TextWriter Writer;
+        private readonly TextWriter Writer;
+        private readonly FileStream FileStream;
         public char FieldDelimiter { get; set; } = ',';
-        public DelimitedWriter(Stream stream)
+        public DelimitedWriter(string filePath)
         {
-            Writer = new StreamWriter(stream);
+            FileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            Writer = new StreamWriter(FileStream);
         }
 
         public override void Write(IDataObject dataObject)
@@ -52,7 +54,7 @@ namespace Runtime.Runtime.Writers
             {
                 if (!first)
                     sb.Append(FieldDelimiter);
-                sb.Append(item);
+                sb.Append(item.Value);
                 first = false;
             }
             Writer.WriteLine(sb.ToString());
@@ -60,6 +62,7 @@ namespace Runtime.Runtime.Writers
 
         public override void Dispose()
         {
+            Writer.Flush();
             Writer.Dispose();
         }
     }

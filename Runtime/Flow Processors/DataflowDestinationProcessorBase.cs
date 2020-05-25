@@ -3,8 +3,10 @@ using Runtime.Data;
 using Runtime.Interfaces;
 using Runtime.Runtime;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
@@ -14,9 +16,13 @@ namespace Runtime.Flow_Processors
     {
         private ActionBlock<Record> Block;
         public ITargetBlock<Record> TargetBlock => Block;
-        public DataflowDestinationProcessorBase(IConfigData configData) : base(configData)
-        {
+        protected readonly BlockingCollection<Record> Channel;
+        public Task WaitingTask => TargetBlock.Completion;
 
+        public int RecordsWriteCount = 0;
+        public DataflowDestinationProcessorBase(IConfigData configData, CancellationToken cancellationToken) : base(configData, cancellationToken)
+        {
+            Channel = new BlockingCollection<Record>();
         }
         protected override void OnInitialize()
         {
@@ -28,6 +34,14 @@ namespace Runtime.Flow_Processors
         {
         }
 
-        protected abstract Task WriteRecord(Record record);
+        protected async virtual Task WriteRecord(Record record)
+        {
+            if (CancellationToken.IsCancellationRequested)
+            {
+                Close();
+                return;
+            }
+            await Task.Run(() => Channel.Add(record));
+        }
     }
 }

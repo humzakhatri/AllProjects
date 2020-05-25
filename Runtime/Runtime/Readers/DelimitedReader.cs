@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Runtime.Runtime.Readers
@@ -43,6 +44,7 @@ namespace Runtime.Runtime.Readers
                 var dataField = new DataField();
                 dataField.Meta = Layout.Elements[i];
                 dataField.Value = line.Data[i];
+                record.Add(dataField);
             }
             return record;
         }
@@ -63,6 +65,7 @@ namespace Runtime.Runtime.Readers
                 {
                     DelimitedLineReader.ReadNext();
                     var line = DelimitedLineReader.Next;
+                    Interlocked.Increment(ref RecordsReadCount);
                     return ReadToLayout(line);
                 });
 

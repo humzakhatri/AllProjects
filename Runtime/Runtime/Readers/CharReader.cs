@@ -11,6 +11,7 @@ namespace Runtime.Runtime.Readers
         public long count = 0;
         public char? Next = null;
         public bool EOF = false;
+        public char Peek => (char)Reader.Peek();
         public CharReader(TextReader reader)
         {
             Reader = reader;

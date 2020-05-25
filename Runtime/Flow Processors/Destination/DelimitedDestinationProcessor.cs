@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Runtime.Flow_Processors.Destination
@@ -15,7 +16,7 @@ namespace Runtime.Flow_Processors.Destination
     {
         private IWriter Writer;
         private readonly DelimitedDestinationConfigData ConfigData;
-        public DelimitedDestinationProcessor(IConfigData configData) : base(configData)
+        public DelimitedDestinationProcessor(IConfigData configData, CancellationToken cancellationToken) : base(configData, cancellationToken)
         {
             ConfigData = (DelimitedDestinationConfigData)configData;
         }
@@ -24,7 +25,11 @@ namespace Runtime.Flow_Processors.Destination
         {
             try
             {
-                await Task.Run(() => Writer.Write(record));
+                await Task.Run(() =>
+                {
+                    Writer.Write(record);
+                    Interlocked.Increment(ref RecordsWriteCount);
+                });
             }
             catch (Exception ex)
             {
@@ -32,10 +37,42 @@ namespace Runtime.Flow_Processors.Destination
             }
         }
 
+        protected override void OnStart()
+        {
+            base.OnStart();
+            try
+            {
+                Task.Run(() =>
+                {
+                    while (!CancellationToken.IsCancellationRequested)
+                    {
+                        var record = Channel.Take();
+                        Writer.Write(record);
+                    }
+                });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         protected override void OnInitialize()
         {
-            Writer = new DelimitedWriter(new FileStream(ConfigData.FilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite));
             base.OnInitialize();
+            Writer = new DelimitedWriter(ConfigData.FilePath);
+        }
+
+        public override void Close()
+        {
+            Writer.Dispose();
+            base.Close();
+        }
+
+        public override void Dispose()
+        {
+            Close();
+            base.Dispose();
         }
     }
 }
