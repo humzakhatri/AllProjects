@@ -8,8 +8,5 @@ namespace Runtime.Server.ServerComponents
 {
     internal abstract class ServerComponentBase : RuntimeProcessorBase
     {
-        public ServerComponentBase()
-        {
-        }
     }
 }
