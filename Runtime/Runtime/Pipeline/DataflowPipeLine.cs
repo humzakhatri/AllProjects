@@ -55,7 +55,7 @@ namespace Runtime.Runtime
             {
                 Source.Start();
                 Destination.WaitingTask.Wait();
-                DisposeAll();
+                CloseAll();
             }
             catch (Exception)
             {
@@ -67,9 +67,9 @@ namespace Runtime.Runtime
             }
         }
 
-        private void DisposeAll()
+        private void CloseAll()
         {
-            Parallel.ForEach(FlowProcessors, p => p.Dispose());
+            Parallel.ForEach(FlowProcessors, p => p.Close());
         }
     }
 }

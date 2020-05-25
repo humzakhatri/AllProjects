@@ -14,6 +14,12 @@ namespace Runtime.Flow_Processors
         {
             CancellationToken = cancellationToken;
         }
-        public bool PreserverOrder { get; set; } = true;
+        public bool PreserverOrder { get; set; } = false;
+
+        public override void Dispose()
+        {
+            Close();
+            base.Dispose();
+        }
     }
 }

@@ -33,15 +33,10 @@ namespace Runtime.Blocks
             try
             {
                 var task = Task.Run(SendRecords);
-                task.Wait();
             }
             catch (Exception ex)
             {
                 throw ex;
-            }
-            finally
-            {
-                Close();
             }
         }
 
@@ -66,6 +61,10 @@ namespace Runtime.Blocks
             catch (Exception ex)
             {
                 throw ex;
+            }
+            finally
+            {
+                Block.Complete();
             }
         }
 
