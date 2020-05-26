@@ -65,7 +65,6 @@ namespace Runtime.Runtime.Readers
                 {
                     DelimitedLineReader.ReadNext();
                     var line = DelimitedLineReader.Next;
-                    Interlocked.Increment(ref RecordsReadCount);
                     return ReadToLayout(line);
                 });
 

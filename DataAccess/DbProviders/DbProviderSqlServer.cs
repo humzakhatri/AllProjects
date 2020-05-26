@@ -1,14 +1,13 @@
-﻿using Framework.Database;
+﻿using Framework.ConfigData.Connection;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Text;
 
-namespace Runtime.Database
+namespace DataAccess.Database
 {
-    internal class SqlServer
+    internal class DbProviderSqlServer : DbProviderBase
     {
-        public void Execute(DbConnectInfoBase dbConnectInfo, string sqlStatement)
+        public void ExecuteNonQuery(DbConnectionConfigBase dbConnectInfo, string sqlStatement)
         {
             try
             {
@@ -25,7 +24,7 @@ namespace Runtime.Database
             }
         }
 
-        public List<Object[]> GetData(DbConnectInfoBase dbConnectInfo, string sqlStatement)
+        public List<Object[]> GetData(DbConnectionConfigBase dbConnectInfo, string sqlStatement)
         {
             SqlDataReader dataReader;
             var data = new List<Object[]>();
@@ -56,5 +55,11 @@ namespace Runtime.Database
                 throw;
             }
         }
+
+        public override void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

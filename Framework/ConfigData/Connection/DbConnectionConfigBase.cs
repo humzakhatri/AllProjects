@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Framework.Database
+namespace Framework.ConfigData.Connection
 {
-    public abstract class DbConnectInfoBase
+    public abstract class DbConnectionConfigBase
     {
         public string ServerName { get; set; }
         public string DatabaseName { get; set; }
         public string SchemaName { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
+        public Credentials Credentials { get; set; }
         protected string _ConnectionString;
         public string ConnectionString
         {

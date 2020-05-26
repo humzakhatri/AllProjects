@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Runtime", "Runtime\Runtime.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSite", "WebSite\WebSite.csproj", "{3CB4740A-34A3-4FAA-A09E-2DA64687A518}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Localizable", "Localizable\Localizable.csproj", "{0A1553D6-D66E-44EE-8F3E-7717776C9283}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Localizable", "Localizable\Localizable.csproj", "{0A1553D6-D66E-44EE-8F3E-7717776C9283}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "Repository\DataAccess.csproj", "{3703EEA3-D5FF-4B2A-A906-B760F3A4FBCB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{0A1553D6-D66E-44EE-8F3E-7717776C9283}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A1553D6-D66E-44EE-8F3E-7717776C9283}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A1553D6-D66E-44EE-8F3E-7717776C9283}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3703EEA3-D5FF-4B2A-A906-B760F3A4FBCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3703EEA3-D5FF-4B2A-A906-B760F3A4FBCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3703EEA3-D5FF-4B2A-A906-B760F3A4FBCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3703EEA3-D5FF-4B2A-A906-B760F3A4FBCB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
