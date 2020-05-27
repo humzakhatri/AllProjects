@@ -13,7 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Framework\Framework.csproj" />
     <ProjectReference Include="..\Localizable\Localizable.csproj" />
-    <ProjectReference Include="..\Repository\DataAccess.csproj" />
   </ItemGroup>
 
   <ItemGroup>

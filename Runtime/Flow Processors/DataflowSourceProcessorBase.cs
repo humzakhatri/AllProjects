@@ -55,7 +55,7 @@ namespace Runtime.Blocks
                     Block.Complete();
                     return;
                 }
-                await foreach (var record in GetRecords())
+                foreach (var record in GetRecords())
                     await Block.SendAsync(record);
             }
             catch (Exception ex)
@@ -79,6 +79,6 @@ namespace Runtime.Blocks
             Block.LinkTo(hasTargetBlock.TargetBlock, BuildLinkOptions());
         }
 
-        protected abstract IAsyncEnumerable<Record> GetRecords();
+        protected abstract IEnumerable<Record> GetRecords();
     }
 }

@@ -7,7 +7,7 @@ namespace Runtime.Runtime.Readers.Database
 {
     internal class DbReaderBase : ReaderBase
     {
-        public override IAsyncEnumerable<Record> Read()
+        public override IEnumerable<Record> Read()
         {
             throw new NotImplementedException();
         }

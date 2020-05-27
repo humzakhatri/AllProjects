@@ -56,17 +56,14 @@ namespace Runtime.Runtime.Readers
             HeaderRead = true;
         }
 
-        public override async IAsyncEnumerable<Record> Read()
+        public override IEnumerable<Record> Read()
         {
             if (HeaderRead == false) ReadHeader();
             do
             {
-                yield return await Task.Run(() =>
-                {
-                    DelimitedLineReader.ReadNext();
-                    var line = DelimitedLineReader.Next;
-                    return ReadToLayout(line);
-                });
+                DelimitedLineReader.ReadNext();
+                var line = DelimitedLineReader.Next;
+                yield return ReadToLayout(line);
 
             } while (DelimitedLineReader.EOF == false);
         }
