@@ -1,12 +1,12 @@
-﻿using Runtime.Data;
-using Runtime.Interfaces;
+﻿using DataAccess.Interfaces;
+using DataAccess.Layouts;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Runtime.Runtime.Readers
+namespace DataAccess.Readers
 {
-    internal abstract class ReaderBase : IReader
+    public abstract class ReaderBase : IReader
     {
         public int RecordsReadCount { get; protected set; }
         public abstract IEnumerable<Record> Read();

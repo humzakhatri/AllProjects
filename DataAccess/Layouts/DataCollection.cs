@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Runtime.Data
+namespace DataAccess.Layouts
 {
     internal abstract class DataCollection : IDataCollectionObject
     {

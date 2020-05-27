@@ -1,10 +1,10 @@
-﻿using Framework.Data;
-using Runtime.Runtime.Readers;
+﻿using DataAccess.Readers.Delimited;
+using Framework.Data;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Runtime.Layout
+namespace DataAccess.Layout.Builder
 {
     public class DelimitedLayoutBuilder
     {

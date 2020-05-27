@@ -1,10 +1,10 @@
-﻿using Framework.Interfaces;
-using Runtime.Data;
+﻿using DataAccess.Layouts;
+using Framework.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Runtime.Interfaces
+namespace DataAccess.Interfaces
 {
     public interface IWriter : INamed, IDisposable
     {

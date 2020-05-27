@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Framework.Data;
 
-namespace Runtime.Data
+namespace DataAccess.Layouts
 {
     internal class DataObjectCollection : DataCollection
     {

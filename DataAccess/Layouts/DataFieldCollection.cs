@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Framework.Data;
 
-namespace Runtime.Data
+namespace DataAccess.Layouts
 {
     internal class DataFieldCollection : DataCollection
     {

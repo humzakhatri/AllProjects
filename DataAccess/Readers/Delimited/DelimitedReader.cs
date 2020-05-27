@@ -1,6 +1,5 @@
-﻿using Framework.Data;
-using Runtime.Data;
-using Runtime.Interfaces;
+﻿using DataAccess.Layouts;
+using Framework.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,9 +7,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Runtime.Runtime.Readers
+namespace DataAccess.Readers.Delimited
 {
-    internal class DelimitedReader : ReaderBase
+    public class DelimitedReader : ReaderBase
     {
         private MetaBase Layout;
         public DelimitedLine Header { get; private set; }

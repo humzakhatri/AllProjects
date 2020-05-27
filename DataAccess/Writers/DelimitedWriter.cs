@@ -1,5 +1,6 @@
-﻿using Framework.Interfaces;
-using Runtime.Data;
+﻿using DataAccess.Layouts;
+using DataAccess.Writer;
+using Framework.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,9 +8,9 @@ using System.Linq;
 using System.Net;
 using System.Text;
 
-namespace Runtime.Runtime.Writers
+namespace DataAccess.Writers.Delimited
 {
-    internal class DelimitedWriter : WriterBase
+    public class DelimitedWriter : WriterBase
     {
         public bool IncludeHeader { get; set; } = true;
         private readonly TextWriter Writer;

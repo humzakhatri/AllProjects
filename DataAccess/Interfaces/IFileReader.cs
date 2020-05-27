@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Runtime.Interfaces
+namespace DataAccess.Interfaces
 {
     interface IFileReader : IReader
     {

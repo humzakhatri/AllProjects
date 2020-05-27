@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Runtime.Runtime.Readers
+namespace DataAccess.Readers.Delimited
 {
     public class DelimitedLineReader : IDisposable
     {

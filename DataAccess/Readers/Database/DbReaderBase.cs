@@ -1,9 +1,9 @@
-﻿using Runtime.Data;
+﻿using DataAccess.Layouts;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Runtime.Runtime.Readers.Database
+namespace DataAccess.Readers.Database
 {
     internal class DbReaderBase : ReaderBase
     {

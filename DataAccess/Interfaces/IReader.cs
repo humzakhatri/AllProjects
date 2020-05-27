@@ -1,12 +1,11 @@
-﻿using Framework.Interfaces;
-using Runtime.Data;
+﻿using DataAccess.Layouts;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Runtime.Interfaces
+namespace DataAccess.Interfaces
 {
-    interface IReader : IDisposable
+    public interface IReader : IDisposable
     {
         int RecordsReadCount { get; }
         IEnumerable<Record> Read();

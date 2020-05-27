@@ -1,11 +1,11 @@
-﻿using Framework.Interfaces;
-using Runtime.Data;
-using Runtime.Interfaces;
+﻿using DataAccess.Interfaces;
+using DataAccess.Layouts;
+using Framework.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Runtime.Runtime.Writers
+namespace DataAccess.Writer
 {
     public abstract class WriterBase : IWriter
     {

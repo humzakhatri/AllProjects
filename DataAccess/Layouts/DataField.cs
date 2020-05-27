@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace Runtime.Data
+namespace DataAccess.Layouts
 {
     [DebuggerDisplay("{Name}=>{Value}")]
     public class DataField : IDataField
