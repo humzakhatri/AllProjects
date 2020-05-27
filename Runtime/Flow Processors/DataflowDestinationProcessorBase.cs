@@ -15,10 +15,10 @@ namespace Runtime.Flow_Processors
     internal abstract class DataflowDestinationProcessorBase : FlowProcessorBase, IHasTargetBlock
     {
         private ActionBlock<Record> Block;
+        private Task WritingTask;
         public ITargetBlock<Record> TargetBlock => Block;
         protected readonly BlockingCollection<Record> Channel;
         public Task WaitingTask => TargetBlock.Completion;
-
         public int RecordsWriteCount = 0;
         public DataflowDestinationProcessorBase(IConfigData configData, CancellationToken cancellationToken) : base(configData, cancellationToken)
         {
@@ -32,6 +32,7 @@ namespace Runtime.Flow_Processors
 
         protected override void OnStart()
         {
+            WritingTask = Task.Run(() => WriteFromChannel());
         }
 
         protected async virtual Task WriteRecord(Record record)
@@ -41,7 +42,32 @@ namespace Runtime.Flow_Processors
                 Close();
                 return;
             }
-            await Task.Run(() => Channel.Add(record));
+            await Task.Run(() => { while (Channel.TryAdd(record) == false) ; });
         }
+
+        public override void Close()
+        {
+            Channel.CompleteAdding();
+            WritingTask.Wait();
+            base.Close();
+        }
+
+        private void WriteFromChannel()
+        {
+            try
+            {
+                while (true)
+                {
+                    if (CancellationToken.IsCancellationRequested || Channel.IsAddingCompleted) break;
+                    if (Channel.TryTake(out var record))
+                        Write(record);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        protected abstract void Write(Record record);
     }
 }

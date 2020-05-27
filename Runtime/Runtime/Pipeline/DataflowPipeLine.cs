@@ -53,7 +53,7 @@ namespace Runtime.Runtime
         {
             try
             {
-                Source.Start();
+                Parallel.ForEach(FlowProcessors, p => p.Start());
                 Destination.WaitingTask.Wait();
                 CloseAll();
             }

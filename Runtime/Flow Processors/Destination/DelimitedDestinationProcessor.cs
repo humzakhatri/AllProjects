@@ -21,40 +21,9 @@ namespace Runtime.Flow_Processors.Destination
             ConfigData = (DelimitedDestinationConfigData)configData;
         }
 
-        protected override async Task WriteRecord(Record record)
+        protected override void Write(Record record)
         {
-            try
-            {
-                await Task.Run(() =>
-                {
-                    Writer.Write(record);
-                    Interlocked.Increment(ref RecordsWriteCount);
-                });
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        protected override void OnStart()
-        {
-            base.OnStart();
-            try
-            {
-                Task.Run(() =>
-                {
-                    while (!CancellationToken.IsCancellationRequested)
-                    {
-                        var record = Channel.Take();
-                        Writer.Write(record);
-                    }
-                });
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            Writer.Write(record);
         }
 
         protected override void OnInitialize()
