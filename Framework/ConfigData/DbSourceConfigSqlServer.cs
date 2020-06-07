@@ -11,9 +11,11 @@ namespace Framework.ConfigData
     {
         public override DbConnectionConfigBase ConnectionConfig { get; set; } = new SqlServerConnectionConfig();
 
+        public override SourceConfigType SourceConfigType => SourceConfigType.SqlServer;
+
         public override string GetQuery()
         {
-            throw new NotImplementedException();
+            return $"Select * from {TableConfig.TableName}";//TODO: generate this query with DOM.
         }
     }
 }

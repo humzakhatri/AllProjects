@@ -3,10 +3,10 @@ using DataAccess.DbProviders;
 using DataAccess.Layouts;
 using Framework.ConfigData;
 using Framework.Data;
+using Microsoft.Data.SqlClient;
 using Framework.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Text;
 
 namespace DataAccess.Readers.Database
@@ -27,15 +27,15 @@ namespace DataAccess.Readers.Database
             IEnumerable<object[]> data;
             using (var connection = new SqlConnection(Config.ConnectionConfig.BuildConnectionString()))
             {
+                connection.Open();
                 data = Provider.QueryData(Config.GetQuery(), connection);
+                foreach (var item in data)
+                    yield return ReadToLayout(item);
             }
-            foreach (var item in data)
-                yield return ReadToLayout(item);
         }
 
         private Record ReadToLayout(object[] item)
         {
-
             if (Layout == null) throw new Exception("Layout not present.");
             var record = new Record();
             for (int i = 0; i < Layout.Elements.Count; i++)

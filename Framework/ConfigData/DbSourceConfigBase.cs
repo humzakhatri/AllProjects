@@ -12,6 +12,6 @@ namespace Framework.ConfigData
     {
         public abstract string GetQuery();
         public abstract DbConnectionConfigBase ConnectionConfig { get; set; }
-        public override SourceConfigType SourceConfigType => SourceConfigType.Database;
+        public DbTableConfig TableConfig { get; set; }
     }
 }
