@@ -1,18 +1,21 @@
 ﻿using Framework.ConfigData.Connection;
+using Framework.Data;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
+using System.Linq;
+using System.Data;
 
 namespace DataAccess.Database
 {
     internal class DbProviderSqlServer : DbProviderBase
     {
-        public void ExecuteNonQuery(DbConnectionConfigBase dbConnectInfo, string sqlStatement)
+        protected const int TableNameIndex = 3;
+        public override void RunNonQuery(string queryText, IDbConnection connection)
         {
             try
             {
-                using (var connection = new SqlConnection(dbConnectInfo.ConnectionString))
-                using (var command = new SqlCommand(sqlStatement, connection))
+                using (var command = new SqlCommand(queryText, connection as SqlConnection))
                 {
                     command.ExecuteNonQuery();
                     connection.Close();
@@ -24,42 +27,37 @@ namespace DataAccess.Database
             }
         }
 
-        public List<Object[]> GetData(DbConnectionConfigBase dbConnectInfo, string sqlStatement)
+        public override IEnumerable<object[]> QueryData(string queryText, IDbConnection connection)
         {
-            SqlDataReader dataReader;
-            var data = new List<Object[]>();
-            try
+            using (var command = new SqlCommand(queryText, (SqlConnection)connection))
             {
-                using (var connection = new SqlConnection(dbConnectInfo.ConnectionString))
-                using (var command = new SqlCommand(sqlStatement, connection))
-                {
-                    connection.Open();
-                    dataReader = command.ExecuteReader();
-                    if (dataReader.HasRows)
-                        while (dataReader.Read())
+                SqlDataReader dataReader;
+                dataReader = command.ExecuteReader();
+                if (dataReader.HasRows)
+                    while (dataReader.Read())
+                    {
+                        var row = new object[dataReader.FieldCount];
+                        for (int i = 0; i < dataReader.FieldCount; i++)
                         {
-                            var row = new object[dataReader.FieldCount];
-                            for (int i = 0; i < dataReader.FieldCount; i++)
-                            {
-                                row[i] = dataReader.GetValue(i);
-                            }
-                            data.Add(row);
+                            row[i] = dataReader.GetValue(i);
                         }
-                    dataReader.Close();
-                    connection.Close();
-                }
-                return data;
-            }
-            catch (Exception)
-            {
-                throw;
+                        yield return row;
+                    }
+                dataReader.Close();
             }
         }
 
-        public override void Dispose()
+        public override MetaFlatObject BuildLayout(string tableName, IDbConnection connection)
         {
-            throw new NotImplementedException();
+            var query = $"select * from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='{tableName}'";//TODO: create this query with sql DOM.
+            var result = QueryData(query, connection);
+            var layout = new MetaFlatObject();
+            foreach (var item in result)
+            {
+                var element = new MetaElement() { Name = item[TableNameIndex].ToString() };
+                layout.Elements.Add(element);
+            }
+            return layout;
         }
-
     }
 }

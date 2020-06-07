@@ -12,6 +12,6 @@ namespace Framework.Interfaces
     public enum SourceConfigType
     {
         Delimited,
-        SqlServer
+        Database
     }
 }

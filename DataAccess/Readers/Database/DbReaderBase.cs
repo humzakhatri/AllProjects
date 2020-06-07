@@ -1,15 +1,51 @@
-﻿using DataAccess.Layouts;
+﻿using DataAccess.Database;
+using DataAccess.DbProviders;
+using DataAccess.Layouts;
+using Framework.ConfigData;
+using Framework.Data;
+using Framework.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Text;
 
 namespace DataAccess.Readers.Database
 {
-    internal class DbReaderBase : ReaderBase
+    public class DbReaderBase : ReaderBase
     {
+        protected DbProviderBase Provider;
+        protected readonly MetaBase Layout;
+        protected readonly DbSourceConfigBase Config;
+        public DbReaderBase(DbSourceConfigBase config, MetaBase layout)
+        {
+            Layout = layout;
+            Config = config;
+            Provider = DbProviderFactory.Create(config.ConnectionConfig.DbProviderType);
+        }
         public override IEnumerable<Record> Read()
         {
-            throw new NotImplementedException();
+            IEnumerable<object[]> data;
+            using (var connection = new SqlConnection(Config.ConnectionConfig.BuildConnectionString()))
+            {
+                data = Provider.QueryData(Config.GetQuery(), connection);
+            }
+            foreach (var item in data)
+                yield return ReadToLayout(item);
+        }
+
+        private Record ReadToLayout(object[] item)
+        {
+
+            if (Layout == null) throw new Exception("Layout not present.");
+            var record = new Record();
+            for (int i = 0; i < Layout.Elements.Count; i++)
+            {
+                var dataField = new DataField();
+                dataField.Meta = Layout.Elements[i];
+                dataField.Value = item[i].ToString();
+                record.Add(dataField);
+            }
+            return record;
         }
 
         public override void Dispose()
