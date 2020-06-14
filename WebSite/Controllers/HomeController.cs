@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebSite.Models;
@@ -28,8 +30,9 @@ namespace WebSite.Controllers
             return View();
         }
 
-        public IActionResult TestStore()
+        public IActionResult RestDeploymentSetting()
         {
+            ViewData["Title"] = "Rest Deployment Settings";
             return View();
         }
 
