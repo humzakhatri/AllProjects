@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -36,6 +35,24 @@ namespace WebSite.Controllers
             return View();
         }
 
+        public IActionResult LoginRegister()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult PerformLogin(LoginModel loginModel)
+        {
+            //TODO: here you will add the logic to login the user
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult PerformRegister(RegisterModel registerModel)
+        {
+            //TODO: here you will add the logic to register the user
+            return View();
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
