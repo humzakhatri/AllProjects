@@ -34,25 +34,6 @@ namespace WebSite.Controllers
             ViewData["Title"] = "Rest Deployment Settings";
             return View();
         }
-
-        public IActionResult LoginRegister()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult PerformLogin(LoginModel loginModel)
-        {
-            //TODO: here you will add the logic to login the user
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult PerformRegister(RegisterModel registerModel)
-        {
-            //TODO: here you will add the logic to register the user
-            return View();
-        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
