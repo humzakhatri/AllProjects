@@ -1,6 +1,6 @@
 ﻿@model WebSite.Models.LoginModel
 <h5 class="card-title">Login</h5>
-<form enctype="multipart/form-data" method="post" action="Account/PerformLogin">
+<form enctype="multipart/form-data" method="post" asp-controller="Account" asp-action="PerformLogin">
     <div class="form-group">
         <label asp-for="UserName">Username</label>
         <input asp-for="UserName" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">

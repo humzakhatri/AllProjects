@@ -40,7 +40,7 @@ namespace WebSite.Controllers
                 }
                 ModelState.AddModelError("", "Unable to login with provided credentials.");
             }
-            return View(loginModel);
+            return RedirectToAction("Index", "Account");
         }
 
         [HttpPost]
@@ -52,9 +52,17 @@ namespace WebSite.Controllers
             var result = await _UserManager.CreateAsync(user, registerModel.Password);
             if (result.Succeeded)
             {
+                await _UserManager.SetLockoutEnabledAsync(user, false);
                 return await PerformLogin(new LoginModel() { UserName = registerModel.UserName, Password = registerModel.Password });
             }
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PerformLogout()
+        {
+            await _SignInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

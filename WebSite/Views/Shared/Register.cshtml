@@ -1,6 +1,6 @@
 ﻿@model WebSite.Models.RegisterModel
 <h5 class="card-title">Register</h5>
-<form enctype="multipart/form-data" method="post" action="Account/PerformRegister">
+<form enctype="multipart/form-data" method="post" asp-controller="Account" asp-action="PerformRegister">
     <div class="form-group">
         <label asp-for="UserName">Username</label>
         <input asp-for="UserName" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
