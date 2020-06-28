@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Framework.REST.EndPoint
 {
-    public class RestSubscriberConfiguration : PersistableObjectBase
+    public class RestSubscriberConfiguration : PersistableDbObjectBase
     {
     }
 }

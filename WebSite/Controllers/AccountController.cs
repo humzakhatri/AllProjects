@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Framework.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebSite.Models;
+using WebSite.Services;
 
 namespace WebSite.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> _UserManager;
-        private readonly SignInManager<IdentityUser> _SignInManager;
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        private readonly UserManager<KUser> _UserManager;
+        private readonly SignInManager<KUser> _SignInManager;
+        public AccountController(UserManager<KUser> userManager, SignInManager<KUser> signInManager)
         {
             _UserManager = userManager;
             _SignInManager = signInManager;
@@ -48,7 +50,7 @@ namespace WebSite.Controllers
         {
             if (!ModelState.IsValid)
                 return View(registerModel);
-            var user = new IdentityUser(registerModel.UserName);
+            var user = new KUser() { UserName = registerModel.UserName, Email = registerModel.UserName };
             var result = await _UserManager.CreateAsync(user, registerModel.Password);
             if (result.Succeeded)
             {

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Framework.REST.EndPoint
 {
-    public class ApiConfiguration : PersistableObjectBase
+    public class ApiConfiguration : PersistableDbObjectBase
     {
         public List<string> QueryParameters { get; set; } = new List<string>();
         public HttpMethod Method { get; set; }
