@@ -1,4 +1,5 @@
-﻿using Framework.Authentication;
+﻿using DataAccess.Persister;
+using Framework.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using WebSite.Database;
 
 namespace WebSite.Services
 {
@@ -22,7 +22,7 @@ namespace WebSite.Services
         }
         public Task<IdentityResult> CreateAsync(KUser user, CancellationToken cancellationToken)
         {
-            return Task.Run(() => { UserPersister.MockerUsers.Add(user); return IdentityResult.Success; });
+            return Task.Run(() => { UserPersister.Save(user); return IdentityResult.Success; });
         }
 
         public Task<IdentityResult> DeleteAsync(KUser user, CancellationToken cancellationToken)
@@ -36,17 +36,17 @@ namespace WebSite.Services
 
         public Task<KUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
         {
-            return Task.Run(() => { return UserPersister.MockerUsers.FirstOrDefault(u => u.Email == normalizedEmail); });
+            return Task.Run(() => { return UserPersister.GetWithEmail(normalizedEmail); });
         }
 
         public Task<KUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
-            return Task.Run(() => { return UserPersister.MockerUsers.FirstOrDefault(u => u.Id == long.Parse(userId)); });
+            return Task.Run(() => { return UserPersister.GetWithID(long.Parse(userId)); });
         }
 
         public Task<KUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
-            return Task.Run(() => { return UserPersister.MockerUsers.FirstOrDefault(u => u.UserName.ToUpper() == normalizedUserName); });
+            return Task.Run(() => { return UserPersister.GetWithUserName(normalizedUserName); });
         }
 
         public Task<string> GetEmailAsync(KUser user, CancellationToken cancellationToken)
@@ -125,8 +125,7 @@ namespace WebSite.Services
 
         public Task<IdentityResult> UpdateAsync(KUser user, CancellationToken cancellationToken)
         {
-            UserPersister.MockerUsers.RemoveAll(u => u.UserName == user.UserName);
-            UserPersister.MockerUsers.Add(user);
+            //TODO
             return Task.FromResult(IdentityResult.Success);
         }
 

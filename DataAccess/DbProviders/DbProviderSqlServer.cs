@@ -15,6 +15,7 @@ namespace DataAccess.Database
         {
             try
             {
+                connection.Open();
                 using (var command = new SqlCommand(queryText, connection as SqlConnection))
                 {
                     command.ExecuteNonQuery();
@@ -29,6 +30,7 @@ namespace DataAccess.Database
 
         public override IEnumerable<object[]> QueryData(string queryText, IDbConnection connection)
         {
+            connection.Open();
             using (var command = new SqlCommand(queryText, (SqlConnection)connection))
             {
                 SqlDataReader dataReader;
