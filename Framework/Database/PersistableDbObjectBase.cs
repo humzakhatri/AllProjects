@@ -8,6 +8,7 @@ namespace Framework.Database
     public class PersistableDbObjectBase : IDbPersistable
     {
         [Identity]
+        [NotNull]
         public long Id { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using Framework.Common;
 using Framework.Database;
 using Framework.Global;
+using Framework.Interfaces;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
@@ -14,12 +15,9 @@ using System.Text;
 
 namespace DataAccess.Persister
 {
-    public class DbPersisterBase
+    public class DbPersisterBase<T> where T : PersistableDbObjectBase
     {
-    }
-
-    public class DbPersisterBase<T> : DbPersisterBase where T : PersistableDbObjectBase
-    {
+        #region public 
         public T GetWithPropertyValue(string propertyName, object value)
         {
             var provider = new DbProviderSqlServer();
@@ -46,6 +44,13 @@ namespace DataAccess.Persister
             }
         }
 
+        public string GetCreationQuery()
+        {
+            return $"CREATE TABLE {typeof(T).Name} ({GetAllFieldsDefinition()})";
+        }
+        #endregion
+
+        #region private
         private string GetPropertyNamesString(bool includeId)
         {
             var properties = typeof(T).GetProperties();
@@ -73,5 +78,38 @@ namespace DataAccess.Persister
                 return (bool)value ? "1" : "0";
             return $"{value}";
         }
+        private string GetAllFieldsDefinition()
+        {
+            var properties = typeof(T).GetProperties();
+            return properties.Select(p => GetFieldDefinition(p)).ToDelimited(",");
+        }
+        private string GetFieldDefinition(PropertyInfo propertyInfo)
+        {
+            var attributes = propertyInfo.GetCustomAttributes();
+            var dataTypeAttribute = attributes.FirstOrDefault(a => a is IDbFieldType) as IDbFieldType;
+            if (dataTypeAttribute != null)
+                return $"{propertyInfo.Name} {dataTypeAttribute.Datatype} {GetConstraints(propertyInfo)}";
+            else
+                return $"{propertyInfo.Name} {GetDataTypeForValueTypes(propertyInfo)} {GetConstraints(propertyInfo)}";
+        }
+        private string GetDataTypeForValueTypes(PropertyInfo propertyInfo)
+        {
+            if (propertyInfo.PropertyType == typeof(long))
+                return "BIGINT";
+            else if (propertyInfo.PropertyType == typeof(int))
+                return "INT";
+            else if (propertyInfo.PropertyType.IsEnum)
+                return "INT";
+            else if (propertyInfo.PropertyType == typeof(bool))
+                return "BIT";
+            throw new Exception($"Unsupported Type, Dev: please add an attribute to the field {propertyInfo.Name} or add one more condition here.");
+        }
+        private string GetConstraints(PropertyInfo propertyInfo)
+        {
+            var attributes = propertyInfo.GetCustomAttributes();
+            var constraint = attributes.Where(a => a is IDbFieldConstraint).Cast<IDbFieldConstraint>().Select(c => c.Constraint);
+            return constraint.ToDelimited(" ");
+        }
+        #endregion
     }
 }
