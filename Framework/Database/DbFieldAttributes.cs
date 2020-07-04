@@ -17,7 +17,7 @@ namespace Framework.Database
         public string Constraint => "NOT NULL";
     }
 
-    public class NVarCharAttribute : Attribute , IDbFieldType
+    public class NVarCharAttribute : Attribute, IDbFieldType
     {
         public readonly int Length;
         public NVarCharAttribute(int length)
@@ -31,5 +31,23 @@ namespace Framework.Database
     public class NTextAttribute : Attribute, IDbFieldType
     {
         public string Datatype => $"NTEXT";
+    }
+
+    public class DecimalAttribute : Attribute, IDbFieldType
+    {
+        public readonly int Precision;
+        public readonly int Scale;
+        public DecimalAttribute(int precision, int scale)
+        {
+            Precision = precision;
+            Scale = scale;
+        }
+
+        public string Datatype => $"DECIMAL({Precision},{Scale})";
+    }
+
+    public class XmlSerializableFieldAttribute : Attribute, IDbFieldType
+    {
+        public string Datatype => "NTEXT";
     }
 }

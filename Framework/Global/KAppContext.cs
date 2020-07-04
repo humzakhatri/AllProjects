@@ -12,11 +12,13 @@ namespace Framework.Global
         {
         }
 
-        public static SqlConnection GetRepositoryConnection()
+        public static SqlConnection CreateAndOpenRepositoryConnection()
         {
             var cred = new Credentials() { Username = "sa", Password = "Astera123" };
             var connectionConfig = new SqlServerConnectionConfig() { Credentials = cred, DatabaseName = "testfaaran", ServerName = "ASTWKS246" };
-            return new SqlConnection() { ConnectionString = connectionConfig.BuildConnectionString() };
+            var conn  = new SqlConnection() { ConnectionString = connectionConfig.BuildConnectionString() };
+            conn.Open();
+            return conn;
         }
     }
 }

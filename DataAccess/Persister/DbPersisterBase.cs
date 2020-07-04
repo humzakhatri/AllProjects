@@ -6,12 +6,14 @@ using Framework.Interfaces;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace DataAccess.Persister
 {
@@ -23,7 +25,7 @@ namespace DataAccess.Persister
             var provider = new DbProviderSqlServer();
             IEnumerable<Object[]> result;
             string queryText = $"SELECT {GetPropertyNamesString(true)} FROM {typeof(T).Name} WHERE {propertyName} = {GetRepresentation(value)}";
-            using (var connection = KAppContext.GetRepositoryConnection())
+            using (var connection = KAppContext.CreateAndOpenRepositoryConnection())
             {
                 result = provider.QueryData(queryText, connection);
                 var first = result.FirstOrDefault();
@@ -38,7 +40,7 @@ namespace DataAccess.Persister
         {
             var provider = new DbProviderSqlServer();
             string queryText = $"INSERT INTO {typeof(T).Name} ({GetPropertyNamesString(false)}) VALUES ({GetPropertyValuesString(obj)})";
-            using (var connection = KAppContext.GetRepositoryConnection())
+            using (var connection = KAppContext.CreateAndOpenRepositoryConnection())
             {
                 provider.RunNonQuery(queryText, connection);
             }
@@ -72,12 +74,26 @@ namespace DataAccess.Persister
 
         private string GetRepresentation(object value)
         {
+            if (TryGetXml(value, out var serialized))
+                return $"'{serialized}'";
             if (value.GetType() == typeof(string))
                 return $"'{value}'";
             else if (value.GetType() == typeof(bool))
                 return (bool)value ? "1" : "0";
             return $"{value}";
         }
+
+        private bool TryGetXml(object obj, out string value)
+        {
+            var attribute = obj.GetType().GetCustomAttribute(typeof(XmlSerializableFieldAttribute));
+            if (attribute == null) { value = null; return false; }
+            var writer = new StringWriter();
+            new XmlSerializer(obj.GetType()).Serialize(writer, obj);
+            writer.Flush();
+            value = writer.GetStringBuilder().ToString();
+            return true;
+        }
+
         private string GetAllFieldsDefinition()
         {
             var properties = typeof(T).GetProperties();
