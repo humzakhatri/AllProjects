@@ -23,7 +23,7 @@ namespace DataAccess.Layout.Builder
 
         private void ReadHeaderFromFile()
         {
-            using (var reader = new DelimitedReader(BuilderOptions.FilePath))
+            using (var reader = new DelimitedReader(new DelimitedReaderOptions() { FilePath = BuilderOptions.FilePath }))
             {
                 reader.ReadHeader();
                 Header = reader.Header;

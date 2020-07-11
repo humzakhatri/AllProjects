@@ -24,7 +24,7 @@ namespace DataAccess.Persister
             }
         }
 
-        public static IEnumerable<Type> GetRepositoryTypes()
+        private static IEnumerable<Type> GetRepositoryTypes()
         {
             var domain = AppDomain.CurrentDomain;
             var assemblies = domain.GetAssemblies();

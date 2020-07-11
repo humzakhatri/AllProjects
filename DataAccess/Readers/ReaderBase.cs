@@ -8,7 +8,7 @@ namespace DataAccess.Readers
 {
     public abstract class ReaderBase : IReader
     {
-        public int RecordsReadCount { get; protected set; }
+        protected int RecordsReadCount;
         public abstract IEnumerable<Record> Read();
         public abstract void Dispose();
     }

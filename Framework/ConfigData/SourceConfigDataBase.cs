@@ -1,9 +1,10 @@
 ﻿using Framework.Data;
+using Framework.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Framework.Interfaces
+namespace Framework.ConfigData
 {
     public abstract class SourceConfigDataBase : ISourceConfigData
     {

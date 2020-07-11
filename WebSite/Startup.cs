@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataAccess.DbProviders;
 using DataAccess.Persister;
 using Framework.Authentication;
 using Microsoft.AspNetCore.Authentication;
@@ -33,6 +34,7 @@ namespace WebSite
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton(typeof(FileDeploymentManager));
             services.AddTransient<KUserPersister>();
             services.AddScoped<ISystemClock, SystemClock>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -43,6 +45,12 @@ namespace WebSite
             builder.AddRoleManager<RoleManager<KRole>>();
             builder.AddRoleStore<KRoleStore>();
             builder.AddUserStore<KUserStore>();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
             services.AddControllersWithViews();
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,7 +72,7 @@ namespace WebSite
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

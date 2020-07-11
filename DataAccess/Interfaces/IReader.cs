@@ -7,7 +7,6 @@ namespace DataAccess.Interfaces
 {
     public interface IReader : IDisposable
     {
-        int RecordsReadCount { get; }
         IEnumerable<Record> Read();
     }
 }

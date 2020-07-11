@@ -13,7 +13,7 @@ namespace DataAccess.Readers.Database
 {
     public class DbReaderBase : ReaderBase
     {
-        protected DbProviderBase Provider;
+        protected IDbProvider Provider;
         protected readonly MetaBase Layout;
         protected readonly DbSourceConfigBase Config;
         public DbReaderBase(DbSourceConfigBase config, MetaBase layout)

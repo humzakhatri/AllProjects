@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DataAccess.DbProviders;
+using Framework.Global;
+using Framework.Interfaces;
+using Framework.Website;
+using Microsoft.AspNetCore.Http;
 using Runtime.REST;
 using Runtime.Runtime;
 using Runtime.Server.ServerComponents;
@@ -8,21 +12,12 @@ using System.Text;
 
 namespace Runtime.Server
 {
-    public class RuntimeServer : RuntimeProcessorBase
+    public class RuntimeServer : IRuntimeServerProxy
     {
-        private ServerComponentApiEndpoint ServerComponentApiEndpoint { get; set; }
-        protected override void OnInitialize()
+        public void ReplicateFileInDatabase(DeployedFileInfo fileInfo)
         {
-            ServerComponentApiEndpoint = new ServerComponentApiEndpoint();
-        }
-
-        protected override void OnStart()
-        {
-        }
-
-        public bool ProcessRestRequest(RestRequestContext context)
-        {
-            return ServerComponentApiEndpoint.ProcessRequest(context);
+            var provider = DbProviderFactory.Create(KAppContext.RepositoryDbProviderType);
+            using var connection = KAppContext.CreateAndOpenRepositoryConnection();
         }
     }
 }

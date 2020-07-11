@@ -1,0 +1,23 @@
+﻿@model FilePreviewModel
+<div>
+    <table class="table">
+        <tr>
+            @foreach (var heading in Model.Records[0])
+            {
+                <td>@heading.Name</td>
+            }
+        </tr>
+        @foreach (var record in Model.Records)
+        {
+            <tr>
+                @foreach (var field in record)
+                {
+                    <td>@field.Value</td>
+                }
+            </tr>
+        }
+    </table>
+    <div>
+        <button class="btn-primary" action ="ProcessFile">Looks Good</button>
+    </div>
+</div>

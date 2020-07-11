@@ -24,7 +24,7 @@ namespace Runtime.Flow_Processors.Source
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            Reader = new DelimitedReader(ConfigData.FilePath, ConfigData.Layout);
+            Reader = new DelimitedReader(new DelimitedReaderOptions() { FilePath = ConfigData.FilePath }, ConfigData.Layout);
         }
         protected override IEnumerable<Record> GetRecords()
         {

@@ -14,22 +14,22 @@ namespace DataAccess.Readers.Delimited
         private MetaBase Layout;
         public DelimitedLine Header { get; private set; }
         private bool HeaderRead = false;
-        private string FilePath;
+        private DelimitedReaderOptions Options;
         private DelimitedLineReader DelimitedLineReader;
-        public DelimitedReader(string filePath)
+        public DelimitedReader(DelimitedReaderOptions options)
         {
-            FilePath = filePath;
+            Options = options;
             DelimitedLineReader = new DelimitedLineReader(CreateTextReader());
         }
 
-        public DelimitedReader(string filePath, MetaBase layout) : this(filePath)
+        public DelimitedReader(DelimitedReaderOptions options, MetaBase layout) : this(options)
         {
             Layout = layout;
         }
 
         private TextReader CreateTextReader()
         {
-            var stream = new FileStream(FilePath, FileMode.Open);
+            var stream = new FileStream(Options.FilePath, FileMode.Open);
             var reader = new StreamReader(stream);
             return reader;
         }
@@ -62,14 +62,27 @@ namespace DataAccess.Readers.Delimited
             {
                 DelimitedLineReader.ReadNext();
                 var line = DelimitedLineReader.Next;
+                Interlocked.Increment(ref RecordsReadCount);
                 yield return ReadToLayout(line);
 
-            } while (DelimitedLineReader.EOF == false);
+            } while (DelimitedLineReader.EOF == false && LimitReached() == false);
+        }
+
+
+        private bool LimitReached()
+        {
+            return Options.RecordsToRead >= 0 && RecordsReadCount >= Options.RecordsToRead;
         }
 
         public override void Dispose()
         {
             DelimitedLineReader.Dispose();
         }
+    }
+
+    public class DelimitedReaderOptions
+    {
+        public string FilePath { get; set; }
+        public long RecordsToRead { get; set; } = -1;
     }
 }
