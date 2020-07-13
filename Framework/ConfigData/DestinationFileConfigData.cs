@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Framework.ConfigData
 {
-    public class DestinationFileConfigData : DestinationConfigDataBase
+    public abstract class DestinationFileConfigData : DestinationConfigDataBase
     {
         public string FilePath { get; set; }
     }

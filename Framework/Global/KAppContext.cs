@@ -16,10 +16,15 @@ namespace Framework.Global
         {
         }
 
-        public static SqlConnection CreateAndOpenRepositoryConnection()
+        public static SqlServerConnectionConfig GetRepositoryConnectionConfig()
         {
             var cred = new Credentials() { Username = "sa", Password = "Astera123" };
-            var connectionConfig = new SqlServerConnectionConfig() { Credentials = cred, DatabaseName = "testfaaran", ServerName = "ASTWKS246" };
+            return new SqlServerConnectionConfig() { Credentials = cred, DatabaseName = "testfaaran", ServerName = "ASTWKS246" };
+        }
+
+        public static SqlConnection CreateAndOpenRepositoryConnection()
+        {
+            var connectionConfig = GetRepositoryConnectionConfig();
             var conn = new SqlConnection() { ConnectionString = connectionConfig.BuildConnectionString() };
             conn.Open();
             return conn;

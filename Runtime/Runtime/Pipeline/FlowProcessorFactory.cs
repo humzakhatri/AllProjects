@@ -44,6 +44,8 @@ namespace Runtime.Runtime.Pipeline
             {
                 case TargetConfigType.Delimited:
                     return new DelimitedDestinationProcessor(configData, cancellationToken);
+                case TargetConfigType.SqlServer:
+                    return new DbDestinationProcessorSqlServer(configData, cancellationToken);
                 default:
                     throw new Exception("The type doesn't have a curresponding processor.");
             }

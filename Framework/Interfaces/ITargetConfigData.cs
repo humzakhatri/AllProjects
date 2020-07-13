@@ -11,6 +11,8 @@ namespace Framework.Interfaces
 
     public enum TargetConfigType
     {
-        Delimited
+        Delimited,
+        SqlServer
+
     }
 }

@@ -76,16 +76,16 @@ namespace DataAccess.Persister
         {
             if (TryGetXml(value, out var serialized))
                 return $"'{serialized}'";
-            if (value.GetType() == typeof(string))
+            if (value?.GetType() == typeof(string))
                 return $"'{value}'";
-            else if (value.GetType() == typeof(bool))
+            else if (value?.GetType() == typeof(bool))
                 return (bool)value ? "1" : "0";
-            return $"{value}";
+            return $"NULL";
         }
 
         private bool TryGetXml(object obj, out string value)
         {
-            var attribute = obj.GetType().GetCustomAttribute(typeof(XmlSerializableFieldAttribute));
+            var attribute = obj?.GetType()?.GetCustomAttribute(typeof(XmlSerializableFieldAttribute));
             if (attribute == null) { value = null; return false; }
             var writer = new StringWriter();
             new XmlSerializer(obj.GetType()).Serialize(writer, obj);

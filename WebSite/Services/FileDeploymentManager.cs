@@ -1,14 +1,20 @@
 ﻿using DataAccess.Layout.Builder;
 using DataAccess.Readers.Delimited;
+using Framework.Authentication;
 using Framework.Global;
 using Framework.Website;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Runtime.Flow_Processors;
+using Runtime.Persisters;
+using Runtime.Runtime.Pipeline;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using WebSite.Models;
@@ -61,10 +67,33 @@ namespace WebSite.Services
             return filePreviewModel;
         }
 
-        public void MoveToRepository(Guid id)
+        public void CreateDeployment(Guid id, long userId)
         {
             var fileInfo = GetFileInfo(id);
+            SaveDeployment(fileInfo, userId);
+            SaveFileToDatabase(fileInfo);
+            DeleteFile(fileInfo);
+        }
 
+        private void DeleteFile(DeployedFileInfo fileInfo)
+        {
+            var dir = TempFileManager.TempDirectory;
+            File.Delete(Path.Combine(dir, fileInfo.RelativePath));
+        }
+
+        private void SaveDeployment(DeployedFileInfo fileInfo, long userId)
+        {
+            var persister = new DataApiDeploymentPersister();
+            //TODO: get the deployment name from the user
+            persister.Save(new DataApiDeployment() { DataTableName = fileInfo.DbTableName, Name = fileInfo.DbTableName, UserId = userId });
+        }
+
+        private void SaveFileToDatabase(DeployedFileInfo fileInfo)
+        {
+            var builder = new DynamicFlowBuilder();
+            var flow = builder.SaveDeployedFileToRepository(fileInfo);
+            var executer = new FlowExecuter();
+            executer.Execute(flow);
         }
     }
 }

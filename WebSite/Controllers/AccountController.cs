@@ -50,7 +50,7 @@ namespace WebSite.Controllers
         {
             if (!ModelState.IsValid)
                 return View(registerModel);
-            var user = new KUser() { UserName = registerModel.UserName, Email = registerModel.UserName };
+            var user = new KUser() { UserName = registerModel.UserName};
             var result = await _UserManager.CreateAsync(user, registerModel.Password);
             if (result.Succeeded)
             {

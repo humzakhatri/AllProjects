@@ -6,9 +6,9 @@ using System.Text;
 
 namespace Framework.ConfigData
 {
-    public class DestinationConfigDataBase : ITargetConfigData
+    public abstract class DestinationConfigDataBase : ITargetConfigData
     {
-        public TargetConfigType TargetConfigType => TargetConfigType.Delimited;
+        public abstract TargetConfigType TargetConfigType { get; }
 
         public ITargetConfigData Next { get; set; }
 

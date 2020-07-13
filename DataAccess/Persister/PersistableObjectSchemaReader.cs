@@ -14,8 +14,11 @@ namespace DataAccess.Persister
             int i = 0;
             foreach (var property in properties)
             {
-                property.SetValue(obj, values[i++]);
+                property.SetValue(obj, IsDbNull(values[i]) ? null : values[i]);
+                i++;
             }
         }
+        private static bool IsDbNull(object obj) => obj is System.DBNull;
     }
+
 }
