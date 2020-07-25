@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Runtime.Flow_Processors;
 using Runtime.Runtime.Pipeline;
+using WebSite.Models;
 using WebSite.Services;
 
 namespace WebSite.Controllers
@@ -51,11 +52,13 @@ namespace WebSite.Controllers
             return View(preview);
         }
 
-        public IActionResult ProcessFile()
+        public IActionResult ProcessFile(DeploymentNameModel model)
         {
             var id = new Guid(HttpContext.Session.Get(FileDeployment));
+            //_UserManager.FindByIdAsync(User.Identity.)
+            //TODO: get thte user and pass the correct Id instaead of hard code.
             var user = _UserManager.FindByNameAsync(User.Identity.Name).Result;
-            _FileDeploymentManager.CreateDeployment(id, user.Id);
+            _FileDeploymentManager.CreateDeployment(id, 1, model.DeploymentName);
             return View();
         }
 

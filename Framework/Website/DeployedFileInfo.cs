@@ -10,7 +10,7 @@ namespace Framework.Website
     public class DeployedFileInfo
     {
         public string DirectoryName { get; set; }
-        public string DbTableName { get => Path.GetFileNameWithoutExtension(FileName); }
+        public string DbTableName { get; set; }
         public string FileName { get; set; }
         public string RelativePath => Path.Combine(DirectoryName, FileName);
     }

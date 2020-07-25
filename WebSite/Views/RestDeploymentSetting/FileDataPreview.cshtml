@@ -1,23 +1,23 @@
 ﻿@model FilePreviewModel
-<div>
-    <table class="table">
-        <tr>
-            @foreach (var heading in Model.Records[0])
-            {
-                <td>@heading.Name</td>
-            }
-        </tr>
-        @foreach (var record in Model.Records)
-        {
+    <div>
+        <table class="table">
             <tr>
-                @foreach (var field in record)
+                @foreach (var heading in Model.Records[0])
                 {
-                    <td>@field.Value</td>
+                    <td>@heading.Name</td>
                 }
             </tr>
-        }
-    </table>
-    <div>
-        <a class="btn-primary" type="button" asp-controller="RestDeploymentSetting" asp-action="ProcessFile">Looks Good</a>
+            @foreach (var record in Model.Records)
+            {
+                <tr>
+                    @foreach (var field in record)
+                    {
+                        <td>@field.Value</td>
+                    }
+                </tr>
+            }
+        </table>
+        <div>
+            <a class="btn-primary" type="button" asp-controller="RestDeploymentSetting" asp-action="DeploymentName">Looks Good</a>
+        </div>
     </div>
-</div>

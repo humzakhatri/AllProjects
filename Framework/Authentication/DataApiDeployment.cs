@@ -13,5 +13,7 @@ namespace Framework.Authentication
         public string Name { get; set; }
         [NVarChar(200)]
         public string DataTableName { get; set; }
+        [NVarChar(100)]
+        public Guid Identifier { get; set; }
     }
 }

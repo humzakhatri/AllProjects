@@ -13,5 +13,6 @@ namespace DataAccess.Database
         public abstract IEnumerable<object[]> QueryData(string queryText, IDbConnection connection);
         public abstract void RunNonQuery(string queryText, IDbConnection connection);
         public abstract MetaFlatObject BuildLayout(string tableName, IDbConnection connection);
+        public abstract IDbConnection CreateConnection(string connectionString);
     }
 }

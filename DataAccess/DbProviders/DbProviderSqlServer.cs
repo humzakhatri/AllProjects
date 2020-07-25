@@ -59,5 +59,7 @@ namespace DataAccess.Database
             }
             return layout;
         }
+
+        public override IDbConnection CreateConnection(string connectionString) => new SqlConnection() { ConnectionString = connectionString };
     }
 }

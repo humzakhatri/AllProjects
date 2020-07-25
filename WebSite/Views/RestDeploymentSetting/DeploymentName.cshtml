@@ -1,9 +1,12 @@
-﻿<div>
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">API Name</span>
+﻿@model WebSite.Models.DeploymentNameModel
+<div>
+    <form enctype="multipart/form-data" method="post" asp-controller="RestDeploymentSetting" asp-action="ProcessFile">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">API Name</span>
+            </div>
+            <input type="text" asp-for="DeploymentName" class="form-control" placeholder="Deployment Name" aria-label="Give a friendly name to your API.(This will be used in the path)" aria-describedby="basic-addon1">
+            <button type="submit" class="btn btn-primary">Done</button>
         </div>
-        <input type="text" class="form-control" placeholder="Username" aria-label="Give a friendly name to your API." aria-describedby="basic-addon1">
-
-    </div>
+    </form>
 </div>

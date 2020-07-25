@@ -1,6 +1,11 @@
-﻿using DataAccess.Layout.Builder;
+﻿using DataAccess.DbProviders;
+using DataAccess.Layout.Builder;
+using DataAccess.Readers.Database;
 using DataAccess.Readers.Delimited;
+using DataAccess.Transformers;
 using Framework.Authentication;
+using Framework.ConfigData;
+using Framework.ConfigData.Connection;
 using Framework.Global;
 using Framework.Website;
 using Microsoft.AspNetCore.Http;
@@ -67,10 +72,25 @@ namespace WebSite.Services
             return filePreviewModel;
         }
 
-        public void CreateDeployment(Guid id, long userId)
+        public string GetResponse(Guid guid, string deploymentName)
+        {
+            var provider = DbProviderFactory.Create(Framework.Database.DbProviderType.SqlServer);
+            using (var connection = KAppContext.CreateAndOpenRepositoryConnection())
+            {
+                var layout = provider.BuildLayout(deploymentName, connection);
+                var tableConfig = new DbTableConfig() { TableName = deploymentName };
+                var config = new DbSourceConfigSqlServer() { ConnectionConfig = KAppContext.GetRepositoryConnectionConfig(), TableConfig = tableConfig };
+                var reader = new DbReaderBase(config, layout);
+                var json = JsonSerializer.Serialize(reader.Read());
+                return json;
+            }
+        }
+
+        public void CreateDeployment(Guid id, long userId, string deploymentName)
         {
             var fileInfo = GetFileInfo(id);
-            SaveDeployment(fileInfo, userId);
+            fileInfo.DbTableName = deploymentName;
+            SaveDeployment(fileInfo, userId, deploymentName);
             SaveFileToDatabase(fileInfo);
             DeleteFile(fileInfo);
         }
@@ -81,11 +101,10 @@ namespace WebSite.Services
             File.Delete(Path.Combine(dir, fileInfo.RelativePath));
         }
 
-        private void SaveDeployment(DeployedFileInfo fileInfo, long userId)
+        private void SaveDeployment(DeployedFileInfo fileInfo, long userId, string deploymentName)
         {
             var persister = new DataApiDeploymentPersister();
-            //TODO: get the deployment name from the user
-            persister.Save(new DataApiDeployment() { DataTableName = fileInfo.DbTableName, Name = fileInfo.DbTableName, UserId = userId });
+            persister.Save(new DataApiDeployment() { DataTableName = deploymentName, Name = deploymentName, UserId = userId, Identifier = Guid.NewGuid() });
         }
 
         private void SaveFileToDatabase(DeployedFileInfo fileInfo)

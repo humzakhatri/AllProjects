@@ -11,5 +11,6 @@ namespace Framework.Interfaces
         IEnumerable<object[]> QueryData(string queryText, IDbConnection connection);
         void RunNonQuery(string queryText, IDbConnection connection);
         MetaFlatObject BuildLayout(string tableName, IDbConnection connection);
+        IDbConnection CreateConnection(string connectionString);
     }
 }
