@@ -13,9 +13,5 @@ namespace Framework.ConfigData
 
         public override SourceConfigType SourceConfigType => SourceConfigType.SqlServer;
 
-        public override string GetQuery()
-        {
-            return $"Select * from {TableConfig.TableName}";//TODO: generate this query with DOM.
-        }
     }
 }

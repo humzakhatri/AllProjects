@@ -18,6 +18,7 @@ namespace WebSite.Controllers
     public class RestDeploymentSettingController : Controller
     {
         private string FileDeployment => nameof(FileDeployment);
+        private string KeyField => nameof(KeyField);
         private FileDeploymentManager _FileDeploymentManager;
         private UserManager<KUser> _UserManager;
         public RestDeploymentSettingController(FileDeploymentManager deploymentFileHandler, UserManager<KUser> userManager)
@@ -54,16 +55,26 @@ namespace WebSite.Controllers
 
         public IActionResult ProcessFile(DeploymentNameModel model)
         {
-            var id = new Guid(HttpContext.Session.Get(FileDeployment));
+            var sessionFileId = new Guid(HttpContext.Session.Get(FileDeployment));
             //_UserManager.FindByIdAsync(User.Identity.)
-            //TODO: get thte user and pass the correct Id instaead of hard code.
+            //TODO: get thte user and save the correct Id instaead of hard code.
             var user = _UserManager.FindByNameAsync(User.Identity.Name).Result;
-            _FileDeploymentManager.CreateDeployment(id, 1, model.DeploymentName);
+            var keyFieldName = HttpContext.Session.GetString(KeyField);
+            var deployment = new DataApiDeployment()
+            {
+                DataTableName = model.DeploymentName,
+                Name = model.DeploymentName,
+                UserId = 1,
+                Identifier = Guid.NewGuid(),
+                KeyFieldName = keyFieldName
+            };
+            _FileDeploymentManager.CreateDeployment(sessionFileId, deployment);
             return View();
         }
 
-        public IActionResult DeploymentName()
+        public IActionResult DeploymentName(FilePreviewModel model)
         {
+            HttpContext.Session.SetString(KeyField, model.KeyFieldName);
             return View();
         }
     }

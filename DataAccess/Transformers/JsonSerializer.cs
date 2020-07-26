@@ -9,10 +9,12 @@ namespace DataAccess.Transformers
 {
     public static class JsonSerializer
     {
-        public static string Serialize(IEnumerable<Record> records)
+        public static string Serialize(IEnumerable<Record> records, bool format = false)
         {
             var textWriter = new StringWriter();
             var writer = new JsonTextWriter(textWriter);
+            if (format)
+                writer.Formatting = Formatting.Indented;
             writer.WriteStartArray();
             foreach (var record in records)
             {
@@ -20,7 +22,7 @@ namespace DataAccess.Transformers
             }
             writer.WriteEndArray();
             writer.Flush();
-            return textWriter.ToString();
+            return textWriter.GetStringBuilder().ToString();
         }
 
         public static string Serialize(Record record)

@@ -1,23 +1,42 @@
 ﻿@model FilePreviewModel
-    <div>
-        <table class="table">
+<div>
+    <table class="table">
+        <tr>
+            @foreach (var heading in Model.Records[0])
+            {
+                <td>@heading.Name</td>
+            }
+        </tr>
+        @foreach (var record in Model.Records)
+        {
             <tr>
-                @foreach (var heading in Model.Records[0])
+                @foreach (var field in record)
                 {
-                    <td>@heading.Name</td>
+                    <td>@field.Value</td>
                 }
             </tr>
-            @foreach (var record in Model.Records)
-            {
-                <tr>
-                    @foreach (var field in record)
-                    {
-                        <td>@field.Value</td>
-                    }
-                </tr>
-            }
-        </table>
-        <div>
-            <a class="btn-primary" type="button" asp-controller="RestDeploymentSetting" asp-action="DeploymentName">Looks Good</a>
-        </div>
+        }
+    </table>
+    <div>
+        <a class="btn-primary" type="button" asp-controller="RestDeploymentSetting" asp-action="DeploymentName">Looks Good</a>
     </div>
+
+
+
+    <form enctype="multipart/form-data" method="post" asp-controller="RestDeploymentSetting" asp-action="DeploymentName">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Select the Field Name
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                @foreach (var item in Model.Records[0])
+                {
+                    <button href="#" data-value="@item.Name" class="dropdown-item" type="button">@item.Name</button>
+                }
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Looks Good!</button>
+    </form>
+
+
+</div>

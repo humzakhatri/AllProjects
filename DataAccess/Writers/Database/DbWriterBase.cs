@@ -1,4 +1,5 @@
 ﻿using DataAccess.DbProviders;
+using DataAccess.Helpers;
 using DataAccess.Layouts;
 using DataAccess.Writer;
 using Framework.Common;
@@ -33,7 +34,7 @@ namespace DataAccess.Writers.Database
         public override void Write(Record record)
         {
             if (record == null) throw new Exception("Record is null");
-            var query = BuildInsertQuery(record);
+            var query = new SqlQueryBuilder().BuildInsertQuery(record, Config);
             using (var connection = new SqlConnection(Config.ConnectionConfig.BuildConnectionString()))
             {
                 connection.Open();
@@ -44,20 +45,12 @@ namespace DataAccess.Writers.Database
         public void CreateTable()
         {
             //TODO: handle creating the correct  datatype here
-            var query = $"CREATE TABLE [{Config.TableConfig.TableName}] ( {GetFieldNamesString(true)} )";
+            var query = new SqlQueryBuilder().GetCreateTableQuery(Config);
             using (var connection = new SqlConnection(Config.ConnectionConfig.BuildConnectionString()))
             {
                 connection.Open();
                 Provider.RunNonQuery(query, connection);
             }
         }
-
-        private string BuildInsertQuery(Record record) =>
-            $"INSERT INTO [{Config.TableConfig.TableName}] ({GetFieldNamesString(false)}) VALUES ({GetValuesString(record)})";
-
-        private string GetFieldNamesString(bool IncludeTypeDefinition) =>
-            Config.Layout.Elements.Select(e => IncludeTypeDefinition ? $"[{e.Name}] NTEXT" : $"[{e.Name}]").ToDelimited(", ");
-
-        private string GetValuesString(Record record) => record.Select(r => $"'{r.Value}'").ToDelimited(", ");
     }
 }

@@ -8,9 +8,8 @@ using System.Text;
 
 namespace Framework.ConfigData
 {
-    public abstract class DbSourceConfigBase : SourceConfigDataBase
+    public abstract class DbSourceConfigBase : SourceConfigDataBase, IHasTableConfig
     {
-        public abstract string GetQuery();
         public abstract DbConnectionConfigBase ConnectionConfig { get; set; }
         public DbTableConfig TableConfig { get; set; }
     }

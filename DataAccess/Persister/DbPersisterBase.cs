@@ -1,4 +1,5 @@
 ﻿using DataAccess.Database;
+using DataAccess.Helpers;
 using Framework.Common;
 using Framework.Database;
 using Framework.Global;
@@ -76,11 +77,7 @@ namespace DataAccess.Persister
         {
             if (TryGetXml(value, out var serialized))
                 return $"'{serialized}'";
-            if (value?.GetType() == typeof(string))
-                return $"'{value}'";
-            else if (value?.GetType() == typeof(bool))
-                return (bool)value ? "1" : "0";
-            return $"NULL";
+            return new SqlQueryBuilder().GetRepresentation(value);
         }
 
         private bool TryGetXml(object obj, out string value)

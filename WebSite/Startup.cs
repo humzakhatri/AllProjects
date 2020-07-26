@@ -35,6 +35,7 @@ namespace WebSite
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(typeof(FileDeploymentManager));
+            services.AddSingleton(typeof(FileDeploymentReader));
             services.AddTransient<KUserPersister>();
             services.AddScoped<ISystemClock, SystemClock>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme);

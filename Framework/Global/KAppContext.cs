@@ -4,6 +4,7 @@ using Framework.Interfaces;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.IO;
 using System.Text;
@@ -22,7 +23,7 @@ namespace Framework.Global
             return new SqlServerConnectionConfig() { Credentials = cred, DatabaseName = "testfaaran", ServerName = "ASTWKS246" };
         }
 
-        public static SqlConnection CreateAndOpenRepositoryConnection()
+        public static IDbConnection CreateAndOpenRepositoryConnection()
         {
             var connectionConfig = GetRepositoryConnectionConfig();
             var conn = new SqlConnection() { ConnectionString = connectionConfig.BuildConnectionString() };

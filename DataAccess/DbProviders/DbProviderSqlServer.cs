@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Data;
+using System.Data.Common;
 
 namespace DataAccess.Database
 {
@@ -20,6 +21,19 @@ namespace DataAccess.Database
                     command.ExecuteNonQuery();
                     connection.Close();
                 }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public override void RunNonQuery(IDbCommand command, IDbConnection connection)
+        {
+            try
+            {
+                command.ExecuteNonQuery();
+                connection.Close();
             }
             catch (Exception)
             {
@@ -45,6 +59,25 @@ namespace DataAccess.Database
                     }
                 dataReader.Close();
             }
+        }
+
+        public override IEnumerable<object[]> QueryData(IDbCommand command, IDbConnection connection)
+        {
+            command.Connection = connection;
+            DbDataReader dataReader;
+            dataReader = (DbDataReader)command.ExecuteReader();
+            if (dataReader.HasRows)
+                while (dataReader.Read())
+                {
+                    var row = new object[dataReader.FieldCount];
+                    for (int i = 0; i < dataReader.FieldCount; i++)
+                    {
+                        row[i] = dataReader.GetValue(i);
+                    }
+                    yield return row;
+                }
+            dataReader.Close();
+
         }
 
         public override MetaFlatObject BuildLayout(string tableName, IDbConnection connection)

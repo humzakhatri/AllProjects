@@ -8,6 +8,8 @@ using Framework.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
+using DataAccess.Helpers;
 
 namespace DataAccess.Readers.Database
 {
@@ -28,9 +30,20 @@ namespace DataAccess.Readers.Database
             using (var connection = new SqlConnection(Config.ConnectionConfig.BuildConnectionString()))
             {
                 connection.Open();
-                data = Provider.QueryData(Config.GetQuery(), connection);
+                data = Provider.QueryData(new SqlQueryBuilder().GetQuery(Config), connection);
                 foreach (var item in data)
                     yield return ReadToLayout(item);
+            }
+        }
+
+        public virtual Record Read(string fieldName, object valueToQuery)
+        {
+            object[] data;
+            using (var connection = new SqlConnection(Config.ConnectionConfig.BuildConnectionString()))
+            {
+                connection.Open();
+                data = Provider.QueryData(new SqlQueryBuilder().GetQuery(Config, fieldName, valueToQuery), connection).FirstOrDefault();
+                return ReadToLayout(data);
             }
         }
 

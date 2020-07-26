@@ -1,5 +1,6 @@
 ﻿using DataAccess.DbProviders;
 using DataAccess.Layout.Builder;
+using DataAccess.Layouts;
 using DataAccess.Readers.Database;
 using DataAccess.Readers.Delimited;
 using DataAccess.Transformers;
@@ -8,6 +9,7 @@ using Framework.ConfigData;
 using Framework.ConfigData.Connection;
 using Framework.Global;
 using Framework.Website;
+using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Runtime.Flow_Processors;
@@ -16,6 +18,7 @@ using Runtime.Runtime.Pipeline;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -71,26 +74,11 @@ namespace WebSite.Services
             }
             return filePreviewModel;
         }
-
-        public string GetResponse(Guid guid, string deploymentName)
+        public void CreateDeployment(Guid sessionFileId, DataApiDeployment deployment)
         {
-            var provider = DbProviderFactory.Create(Framework.Database.DbProviderType.SqlServer);
-            using (var connection = KAppContext.CreateAndOpenRepositoryConnection())
-            {
-                var layout = provider.BuildLayout(deploymentName, connection);
-                var tableConfig = new DbTableConfig() { TableName = deploymentName };
-                var config = new DbSourceConfigSqlServer() { ConnectionConfig = KAppContext.GetRepositoryConnectionConfig(), TableConfig = tableConfig };
-                var reader = new DbReaderBase(config, layout);
-                var json = JsonSerializer.Serialize(reader.Read());
-                return json;
-            }
-        }
-
-        public void CreateDeployment(Guid id, long userId, string deploymentName)
-        {
-            var fileInfo = GetFileInfo(id);
-            fileInfo.DbTableName = deploymentName;
-            SaveDeployment(fileInfo, userId, deploymentName);
+            var fileInfo = GetFileInfo(sessionFileId);
+            fileInfo.DbTableName = deployment.Name;
+            SaveDeployment(deployment);
             SaveFileToDatabase(fileInfo);
             DeleteFile(fileInfo);
         }
@@ -101,10 +89,10 @@ namespace WebSite.Services
             File.Delete(Path.Combine(dir, fileInfo.RelativePath));
         }
 
-        private void SaveDeployment(DeployedFileInfo fileInfo, long userId, string deploymentName)
+        private void SaveDeployment(DataApiDeployment deployment)
         {
             var persister = new DataApiDeploymentPersister();
-            persister.Save(new DataApiDeployment() { DataTableName = deploymentName, Name = deploymentName, UserId = userId, Identifier = Guid.NewGuid() });
+            persister.Save(deployment);
         }
 
         private void SaveFileToDatabase(DeployedFileInfo fileInfo)

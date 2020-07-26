@@ -10,19 +10,26 @@ namespace WebSite.Controllers
     [Route("UserApi")]
     public class CustomApiController : Controller
     {
-        private readonly FileDeploymentManager _DeploymentManager;
-        public CustomApiController(FileDeploymentManager deploymentManager)
+        private readonly FileDeploymentReader _DeploymentReader;
+        public CustomApiController(FileDeploymentReader deploymentReader)
         {
-            _DeploymentManager = deploymentManager;
+            _DeploymentReader = deploymentReader;
         }
         public IActionResult Index()
         {
             return View();
         }
-        [HttpGet("{guid}/{deploymentName}")]
-        public IActionResult Get(Guid guid, string deploymentName)
+        [HttpGet("{deploymentName}")]
+        public IActionResult Get(string deploymentName)
         {
-            var response = _DeploymentManager.GetResponse(guid, deploymentName);
+            var response = _DeploymentReader.GetResponse(deploymentName);
+            return Content(response);
+        }
+
+        [HttpGet("{deploymentName}/{id}")]
+        public IActionResult Get(string deploymentName, string id)
+        {
+            var response = _DeploymentReader.GetResponse(deploymentName, id);
             return Json(response);
         }
     }
